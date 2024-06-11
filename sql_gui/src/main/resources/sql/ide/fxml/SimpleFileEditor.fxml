@@ -37,9 +37,9 @@
                 <Menu text="Database Connection">
                     <MenuItem onAction="#setDatabase" text="Choose a Database" />
                 </Menu>
-                <!-- <Menu text="Editor Change">
+                <Menu text="Editor Change">
                     <MenuItem onAction="#changeToModeler" text="Change to Modeler" />
-                </Menu> -->
+                </Menu>
 
             </MenuBar>
             <Button fx:id="runFileButton" onAction="#runFile" text="Run File"

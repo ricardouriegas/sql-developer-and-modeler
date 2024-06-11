@@ -190,14 +190,18 @@ public class FileEditorController {
     @FXML
     public void changeToModeler(ActionEvent event) throws IOException {
         lexerThread.interrupt();
-        
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sql/ide/fxml/ModelerEditor.fxml"));
         Parent root = loader.load();
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/sql/ide/css/highlight.css").toExternalForm());
         
         Stage stage = new Stage();
         stage.setTitle("Modeler Editor");
-        stage.setScene(new Scene(root));
+        stage.setScene(scene);
         stage.show();
+
         // close window
         ((Stage) ((Pane) codeArea.getParent()).getScene().getWindow()).close();
 

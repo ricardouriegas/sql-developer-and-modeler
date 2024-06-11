@@ -17,14 +17,14 @@
                     <MenuItem text="Return to SQL Developer" onAction="#returnDeveloper" />
                     <MenuItem text="Exit" onAction="#exitApplication" />
                 </Menu>
+                <Menu text="Help">
+                    <MenuItem text="Usage" onAction="#usageWindow" />
+                    <MenuItem text="About" onAction="#aboutWindow" />
+                </Menu>
             </menus>
         </MenuBar>
     </top>
-    <left>
-        <TreeView fx:id="treeView"/>
-    </left>
     <center>
         <Canvas fx:id="canva" width="800" height="600" />
-        <!-- onMousePressed="#handleMousePressed" onMouseDragged="#handleMouseDragged" onMouseReleased="#handleMouseReleased" /> -->
     </center> 
 </BorderPane> 
