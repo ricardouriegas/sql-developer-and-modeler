@@ -3,7 +3,7 @@ package sql.ide.shapes;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class ModelerLine implements ShapeInterface {
+public class RelationDraw implements ShapeInterface {
     private double startX;
     private double startY;
     private double endX;
@@ -11,7 +11,7 @@ public class ModelerLine implements ShapeInterface {
 
     private static final double CLICK_TOLERANCE = 5; // ? to hard to click a line so a little tolerance added
 
-    public ModelerLine(double startX, double startY, double endX, double endY) {
+    public RelationDraw(double startX, double startY, double endX, double endY) {
         this.startX = startX;
         this.startY = startY;
         this.endX = endX;

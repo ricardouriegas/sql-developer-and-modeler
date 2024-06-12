@@ -15,14 +15,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-// import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import sql.ide.shapes.*;
 
 public class ModelerController {
     @FXML
-    Canvas canva;
+    private Canvas canva;
 
     private double initialX;
     private double initialY;
@@ -36,8 +34,7 @@ public class ModelerController {
     private static final double SQUARE_SIZE = 50; // square size
 
     /**
-     * Initialize function to everything that will run when the program
-     * initilize
+     * Initialize the controller
      */
     @FXML
     public void initialize() {
@@ -46,19 +43,42 @@ public class ModelerController {
         canva.addEventHandler(MouseEvent.MOUSE_PRESSED, this::handleMousePressed);
         canva.addEventHandler(MouseEvent.MOUSE_DRAGGED, this::handleMouseDragged);
         canva.addEventHandler(MouseEvent.MOUSE_RELEASED, this::handleMouseReleased);
+
+        // bind canvas size to the stage size
+        Pane parent = (Pane) canva.getParent();
+        canva.widthProperty().bind(parent.widthProperty());
+        canva.heightProperty().bind(parent.heightProperty());
+
+        // redraw shapes when the canvas size changes
+        canva.widthProperty().addListener(evt -> drawShapes());
+        canva.heightProperty().addListener(evt -> drawShapes());
+          
     }
 
     /**************************************************************************/
-    /************************ Import and Export Functions ***********************/
+    /********************** Import and Export Functions ***********************/
     /**************************************************************************/
+    /**
+     * Import the file (import the model from a sql file)
+     * @param event
+     */
     public void importFile(ActionEvent event) {
 
     }
 
+    /**
+     * Export the file (export the model to a sql file)
+     * @param event
+     */
     public void exportFile(ActionEvent event) {
 
     }
 
+    /**
+     * Return th user to the developer window
+     * @param event
+     * @throws IOException
+     */
     public void returnDeveloper(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sql/ide/fxml/SimpleFileEditor.fxml"));
         Parent root = loader.load();
@@ -77,18 +97,33 @@ public class ModelerController {
     }
 
     /**************************************************************************/
-    /**************************** Help Functions ********************************/
+    /*************************** Help Functions *******************************/
     /**************************************************************************/
+    /**
+     * Open the usage window
+     * @param event
+     */
     public void usageWindow(ActionEvent event) {
         // open usage window
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Usage");
         alert.setHeaderText("Usage");
-        alert.setContentText("This is a simple usage window");
+        alert.setContentText("Double click to Create a table " +
+            "\n Click and drag to move a table " +
+            "\n Click and drag to create a relationship between tables "+
+            "\n Right click to open the context menu " +
+            "\n Use the context menu to add a table, add a relationship, or delete a table " +
+            "\n Use the File menu to import or export a model " +
+            "\n Use the Help menu to view the usage information or about window " +
+            "\n Use the Exit menu to exit the application");
 
         alert.showAndWait();
     }
 
+    /**
+     * Open the about window
+     * @param event
+     */
     public void aboutWindow(ActionEvent event) {
         // open about window
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -100,44 +135,72 @@ public class ModelerController {
     }
 
     /**************************************************************************/
-    /****************************** Handle Mouse ********************************/
+    /****************************** Handle Mouse ******************************/
     /**************************************************************************/
+    /**
+     * Handle when the mouse is clicked
+     * @param event
+     */
     private void handleMouseClicked(MouseEvent event) {
-        if (event.getButton() == MouseButton.PRIMARY) {
+        if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY){
             double x = event.getX();
             double y = event.getY();
-            ModelerTable square = new ModelerTable(x - SQUARE_SIZE / 2, y - SQUARE_SIZE / 2, SQUARE_SIZE);
+            TableDraw square = new TableDraw(x - SQUARE_SIZE / 2, y - SQUARE_SIZE / 2, SQUARE_SIZE);
             shapes.add(square);
             drawShapes();
-        } else {
-            double x = event.getX();
-            double y = event.getY();
-            if (drawingLine) {
-                ModelerLine line = (ModelerLine) selectedShape;
-                line.setEndX(x);
-                line.setEndY(y);
+        } else if (event.getButton() == MouseButton.SECONDARY && clickOnAShape(event.getX(), event.getY())) {
+            System.out.println("Right click inside a shape");
+            // todo: create a line between two shapes
+            if (drawingLine) { // end drawing a line
+                RelationDraw line = (RelationDraw) selectedShape;
+                line.setEndX(event.getX());
+                line.setEndY(event.getY());
                 drawingLine = false;
-            } else {
-                lineStartX = x;
-                lineStartY = y;
-                ModelerLine line = new ModelerLine(lineStartX, lineStartY, lineStartX, lineStartY);
+            } else { // start drawing a line
+                lineStartX = event.getX();
+                lineStartY = event.getY();
+                RelationDraw line = new RelationDraw(lineStartX, lineStartY, lineStartX, lineStartY);
                 shapes.add(line);
                 selectedShape = line;
                 drawingLine = true;
             }
             drawShapes();
+
         }
     }
 
+    /**
+     * Check if the click is inside a shape
+     * @param x
+     * @param y
+     * @return
+     */
+    private boolean clickOnAShape(double x, double y) {
+        for (ShapeInterface shape : shapes) {
+            if (shape.contains(x, y)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Handle when the mouse is pressed
+     * @param event
+     */
     private void handleMousePressed(MouseEvent event) {
         selectedShape = getShapeAt(event.getX(), event.getY());
-        if (selectedShape != null) {
+        if (selectedShape != null) { // if a shape is selected
             initialX = event.getX();
             initialY = event.getY();
             dragging = true;
         }
     }
 
+    /**
+     * Handle when the mouse is dragged (moved)
+     * @param event
+     */
     private void handleMouseDragged(MouseEvent event) {
         if (dragging && selectedShape != null) {
             double deltaX = event.getX() - initialX;
@@ -149,10 +212,20 @@ public class ModelerController {
         }
     }
 
+    /**
+     * Handle when the mouse is released
+     * @param event
+     */
     private void handleMouseReleased(MouseEvent event) {
         dragging = false;
     }
 
+    /**************************************************************************/
+    /*************************** Shapes Functions *****************************/
+    /**************************************************************************/
+    /**
+     * Draw the shape
+     */
     private void drawShapes() {
         GraphicsContext gc = canva.getGraphicsContext2D();
         gc.clearRect(0, 0, canva.getWidth(), canva.getHeight());
@@ -161,6 +234,12 @@ public class ModelerController {
         }
     }
 
+    /**
+     * Get the shape at the given x and y
+     * @param x
+     * @param y
+     * @return
+     */
     private ShapeInterface getShapeAt(double x, double y) {
         for (ShapeInterface shape : shapes) {
             if (shape.contains(x, y)) {
@@ -171,26 +250,10 @@ public class ModelerController {
     }
 
     /**************************************************************************/
-    /************************** Shapes Functions ********************************/
-    /**************************************************************************/
-    public void addRectangle(ActionEvent event) {
-
-    }
-
-    public void addCircle(ActionEvent event) {
-
-    }
-
-    public void addLine(ActionEvent event) {
-
-    }
-
-    /**************************************************************************/
-    /********************************** Exit ************************************/
+    /********************************* Exit ***********************************/
     /**************************************************************************/
     /**
      * Exit Application
-     * 
      * @param event
      */
     public void exitApplication(ActionEvent event) {

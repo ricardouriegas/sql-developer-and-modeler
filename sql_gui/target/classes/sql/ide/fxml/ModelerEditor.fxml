@@ -25,6 +25,6 @@
         </MenuBar>
     </top>
     <center>
-        <Canvas fx:id="canva" width="800" height="600" />
+        <Canvas fx:id="canva" />
     </center> 
 </BorderPane> 

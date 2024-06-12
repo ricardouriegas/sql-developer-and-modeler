@@ -200,6 +200,8 @@ public class FileEditorController {
         Stage stage = new Stage();
         stage.setTitle("Modeler Editor");
         stage.setScene(scene);
+        stage.setWidth(800);
+        stage.setHeight(600);
         stage.show();
 
         // close window

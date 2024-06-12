@@ -3,12 +3,12 @@ package sql.ide.shapes;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class ModelerTable implements ShapeInterface {
+public class TableDraw implements ShapeInterface {
     private double x;
     private double y;
     private double size;
 
-    public ModelerTable(double x, double y, double size) {
+    public TableDraw(double x, double y, double size) {
         this.x = x;
         this.y = y;
         this.size = size;
@@ -16,7 +16,7 @@ public class ModelerTable implements ShapeInterface {
 
     @Override
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.BLUE);
+        gc.setFill(Color.rgb(125, 240, 255));
         gc.fillRect(x, y, size, size);
     }
 
