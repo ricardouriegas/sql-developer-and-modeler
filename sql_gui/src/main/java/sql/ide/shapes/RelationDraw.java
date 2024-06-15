@@ -9,7 +9,7 @@ public class RelationDraw implements ShapeInterface {
     private double endX;
     private double endY;
 
-    private static final double CLICK_TOLERANCE = 5; // ? to hard to click a line so a little tolerance added
+    private static final double CLICK_TOLERANCE = 5; // ? too hard to click a line so a little tolerance added
 
     public RelationDraw(double startX, double startY, double endX, double endY) {
         this.startX = startX;
