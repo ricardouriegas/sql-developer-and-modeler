@@ -61,3 +61,7 @@ La aplicación será evaluada en base a los siguientes criterios:
 * **Usabilidad:** La interfaz gráfica debe ser intuitiva y fácil de usar. Las herramientas de diseño de diagramas ER deben ser prácticas y eficientes.
 * **Calidad del código:** El código fuente debe estar bien escrito, documentado y organizado de manera lógica.
 * **Manejo de errores:** La aplicación debe manejar adecuadamente los errores y mostrar mensajes informativos al usuario.
+
+# Ideas
+
+- [ ] [Idea de Uriegas](UriegasIdea.md)
