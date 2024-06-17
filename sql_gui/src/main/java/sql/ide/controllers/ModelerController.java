@@ -28,8 +28,8 @@ public class ModelerController {
     private boolean drawingLine = false;
     private double lineStartX;
     private double lineStartY;
-    private List<ShapeInterface> shapes = new ArrayList<>();
-    private ShapeInterface selectedShape;
+    private List<Shape> shapes = new ArrayList<>();
+    private Shape selectedShape;
 
     private static final double SQUARE_SIZE = 50; // square size
 
@@ -145,21 +145,21 @@ public class ModelerController {
         if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY){
             double x = event.getX();
             double y = event.getY();
-            TableDraw square = new TableDraw(x - SQUARE_SIZE / 2, y - SQUARE_SIZE / 2, SQUARE_SIZE);
+            Table square = new Table(x - SQUARE_SIZE / 2, y - SQUARE_SIZE / 2, SQUARE_SIZE);
             shapes.add(square);
             drawShapes();
         } else if (event.getButton() == MouseButton.SECONDARY && clickOnAShape(event.getX(), event.getY())) {
             System.out.println("Right click inside a shape");
             // todo: create a line between two shapes
             if (drawingLine) { // end drawing a line
-                RelationDraw line = (RelationDraw) selectedShape;
+                Relation line = (Relation) selectedShape;
                 line.setEndX(event.getX());
                 line.setEndY(event.getY());
                 drawingLine = false;
             } else { // start drawing a line
                 lineStartX = event.getX();
                 lineStartY = event.getY();
-                RelationDraw line = new RelationDraw(lineStartX, lineStartY, lineStartX, lineStartY);
+                Relation line = new Relation(lineStartX, lineStartY, lineStartX, lineStartY);
                 shapes.add(line);
                 selectedShape = line;
                 drawingLine = true;
@@ -176,7 +176,7 @@ public class ModelerController {
      * @return
      */
     private boolean clickOnAShape(double x, double y) {
-        for (ShapeInterface shape : shapes) {
+        for (Shape shape : shapes) {
             if (shape.contains(x, y)) {
                 return true;
             }
@@ -229,7 +229,7 @@ public class ModelerController {
     private void drawShapes() {
         GraphicsContext gc = canva.getGraphicsContext2D();
         gc.clearRect(0, 0, canva.getWidth(), canva.getHeight());
-        for (ShapeInterface shape : shapes) {
+        for (Shape shape : shapes) {
             shape.draw(gc);
         }
     }
@@ -240,8 +240,8 @@ public class ModelerController {
      * @param y
      * @return
      */
-    private ShapeInterface getShapeAt(double x, double y) {
-        for (ShapeInterface shape : shapes) {
+    private Shape getShapeAt(double x, double y) {
+        for (Shape shape : shapes) {
             if (shape.contains(x, y)) {
                 return shape;
             }

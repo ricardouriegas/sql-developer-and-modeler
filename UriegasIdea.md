@@ -8,8 +8,8 @@ Tenemos X cantidad de tablas, por lo que deberiamos usar Hashmaps para establece
 
    - Nombre
    - Atributos (Hashmap)
-   - Clave Primaria
-   - Claves Foraneas
+   - Llave Primaria
+   - Relaciones (Objeto Relacion)
 
 2. **Relacion**, con los siguientes atributos:
    - Tabla Origen
@@ -23,19 +23,7 @@ El hashmap quedaria algo asi:
 ```JSON
 nombre_tabla_1: {
     objeto_tabla_1, // Objeto tabla
-    relaciones: [ // Lista de relaciones
-        {
-            tabla_origen: nombre_tabla_1,
-            tabla_destino: nombre_tabla_2,
-            tipo_relacion: 1 a 1
-        },
-        {
-            tabla_origen: nombre_tabla_1,
-            tabla_destino: nombre_tabla_3,
-            tipo_relacion: 1 a N
-        }
-    
-    ]
+    extra_info // Informacion extra opcional
 }
 ```
 
