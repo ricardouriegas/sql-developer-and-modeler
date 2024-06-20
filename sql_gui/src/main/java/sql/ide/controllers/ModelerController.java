@@ -148,6 +148,9 @@ public class ModelerController {
             double x = event.getX();
             double y = event.getY();
             Table square = new Table(x - SQUARE_SIZE / 2, y - SQUARE_SIZE / 2, SQUARE_SIZE);
+
+            // todo: open context menu
+
             shapes.add(square);
             drawShapes();
         
@@ -156,6 +159,7 @@ public class ModelerController {
             // the user right clicked inside a shape
             // TODO: open the context menu
             System.out.println("Right click");
+
 
         /**
          * Ifs for the line drawing
@@ -166,6 +170,9 @@ public class ModelerController {
             double y = event.getY();
             Relation relation = new Relation(lineStartX, lineStartY, x, y);
             shapes.add(relation);
+
+            // TODO: open context menu
+
             drawShapes();
             drawingLine = false;
         } else if (event.getClickCount() == 1 && clickOnAShape(event.getX(), event.getY())) {
@@ -232,7 +239,7 @@ public class ModelerController {
     /*************************** Shapes Functions *****************************/
     /**************************************************************************/
     /**
-     * Draw the shape
+     * Draw the shapes
      */
     private void drawShapes() {
         GraphicsContext gc = canva.getGraphicsContext2D();

@@ -6,17 +6,24 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Table implements Shape {
-    // for shape
+    // shape variables
     private double x;
     private double y;
     private double size;
 
-    // for table
+    // table variables
     private String name;
     private List<String> attributes;
     private Object primaryKey;
     private List<Relation> foreignKeys;
 
+    /**
+     * Constructor
+     * 
+     * @param x
+     * @param y
+     * @param size
+     */
     public Table(double x, double y, double size) {
         this.x = x;
         this.y = y;
@@ -26,6 +33,33 @@ public class Table implements Shape {
     /**************************************************************************/
     /************************ GETTERS AND SETTERS *****************************/
     /**************************************************************************/
+    
+    //? shape getters and setters
+    public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public double getSize() {
+        return size;
+    }
+
+    public void setSize(Double size) {
+        this.size = size;
+    }
+
+    //? table getters and setters
     public String getName() {
         return name;
     }

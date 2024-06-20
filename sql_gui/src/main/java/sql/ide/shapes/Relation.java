@@ -10,13 +10,21 @@ public class Relation implements Shape {
     private double endX;
     private double endY;
 
-    private static final double CLICK_TOLERANCE = 5; // ? too hard to click a line so a little tolerance added
+    private static final double CLICK_TOLERANCE = 5; //? too hard to click a line so a little tolerance added
 
-    // relation variable
-    private Table start;
-    private Table end;
+    // relation variables
+    private Table startTable;
+    private Table endTable;
     private String relationType;
 
+    /**
+     * Constructor
+     * 
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     */
     public Relation(double startX, double startY, double endX, double endY) {
         this.startX = startX;
         this.startY = startY;
@@ -24,6 +32,11 @@ public class Relation implements Shape {
         this.endY = endY;
     }
 
+    /**************************************************************************/
+    /************************ GETTERS AND SETTERS *****************************/
+    /**************************************************************************/
+
+    //? shape getters and setters
     public void setEndX(double endX) {
         this.endX = endX;
     }
@@ -31,6 +44,35 @@ public class Relation implements Shape {
     public void setEndY(double endY) {
         this.endY = endY;
     }
+
+    //? relation getters and setters
+    public Table getStart() {
+        return startTable;
+    }
+
+    public void setStart(Table startTable) {
+        this.startTable = startTable;
+    }
+
+    public Table getEnd() {
+        return endTable;
+    }
+
+    public void setEnd(Table endTable) {
+        this.endTable = endTable;
+    }
+
+    public String getRelationType() {
+        return relationType;
+    }
+
+    public void setRelationType(String relationType) {
+        this.relationType = relationType;
+    }
+    
+    /**************************************************************************/
+    /************************ INTERFACE METHODS *******************************/
+    /**************************************************************************/
 
     @Override
     public void draw(GraphicsContext gc) {
@@ -54,6 +96,10 @@ public class Relation implements Shape {
         double distance = pointLineDistance(startX, startY, endX, endY, x, y);
         return distance < CLICK_TOLERANCE;
     }
+
+    /**************************************************************************/
+    /****************************** METHODS ***********************************/
+    /**************************************************************************/
 
     private double pointLineDistance(double x1, double y1, double x2, double y2, double px, double py) {
         double A = px - x1;
@@ -85,4 +131,5 @@ public class Relation implements Shape {
         double dy = py - yy;
         return Math.sqrt(dx * dx + dy * dy);
     }
+
 }
