@@ -83,11 +83,11 @@ public class Relation implements Shape {
 
     @Override
     public void move(double deltaX, double deltaY) {
-        // basically move the start and end points
-        this.startX += deltaX;
-        this.startY += deltaY;
-        this.endX += deltaX;
-        this.endY += deltaY;
+        // // basically move the start and end points
+        // this.startX += deltaX;
+        // this.startY += deltaY;
+        // this.endX += deltaX;
+        // this.endY += deltaY;
     }
 
     @Override

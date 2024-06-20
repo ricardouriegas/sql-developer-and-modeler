@@ -52,7 +52,7 @@ public class ModelerController {
         // redraw shapes when the canvas size changes
         canva.widthProperty().addListener(evt -> drawShapes());
         canva.heightProperty().addListener(evt -> drawShapes());
-          
+
     }
 
     /**************************************************************************/
@@ -60,6 +60,7 @@ public class ModelerController {
     /**************************************************************************/
     /**
      * Import the file (import the model from a sql file)
+     * 
      * @param event
      */
     public void importFile(ActionEvent event) {
@@ -68,6 +69,7 @@ public class ModelerController {
 
     /**
      * Export the file (export the model to a sql file)
+     * 
      * @param event
      */
     public void exportFile(ActionEvent event) {
@@ -76,6 +78,7 @@ public class ModelerController {
 
     /**
      * Return th user to the developer window
+     * 
      * @param event
      * @throws IOException
      */
@@ -101,6 +104,7 @@ public class ModelerController {
     /**************************************************************************/
     /**
      * Open the usage window
+     * 
      * @param event
      */
     public void usageWindow(ActionEvent event) {
@@ -109,19 +113,20 @@ public class ModelerController {
         alert.setTitle("Usage");
         alert.setHeaderText("Usage");
         alert.setContentText("Double click to Create a table " +
-            "\n Click and drag to move a table " +
-            "\n Click and drag to create a relationship between tables "+
-            "\n Right click to open the context menu " +
-            "\n Use the context menu to add a table, add a relationship, or delete a table " +
-            "\n Use the File menu to import or export a model " +
-            "\n Use the Help menu to view the usage information or about window " +
-            "\n Use the Exit menu to exit the application");
+                "\n Click and drag to move a table " +
+                "\n Click inside a table to start/end a relationship between 2 tables" +
+                "\n Right click to open the context menu " +
+                "\n Use the context menu to add a table, add a relationship, or delete a table " +
+                "\n Use the File menu to import or export a model " +
+                "\n Use the Help menu to view the usage information or about window " +
+                "\n Use the Exit menu to exit the application");
 
         alert.showAndWait();
     }
 
     /**
      * Open the about window
+     * 
      * @param event
      */
     public void aboutWindow(ActionEvent event) {
@@ -139,53 +144,69 @@ public class ModelerController {
     /**************************************************************************/
     /**
      * Handle when the mouse is clicked
+     * 
      * @param event
      */
     private void handleMouseClicked(MouseEvent event) {
 
         // if for the double click to create a table
-        if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY){
+        if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
             double x = event.getX();
             double y = event.getY();
-            Table square = new Table(x - SQUARE_SIZE / 2, y - SQUARE_SIZE / 2, SQUARE_SIZE);
-
             // todo: open context menu
 
+            Table square = new Table(x - SQUARE_SIZE / 2, y - SQUARE_SIZE / 2, SQUARE_SIZE);
             shapes.add(square);
             drawShapes();
-        
-        // if for the right click
+
+            // if for the right click
         } else if (event.getButton() == MouseButton.SECONDARY && clickOnAShape(event.getX(), event.getY())) {
             // the user right clicked inside a shape
             // TODO: open the context menu
-            System.out.println("Right click");
 
+            /**
+             * If's for the line drawing
+             */
+        } else if (drawingLine) {
+            Shape shape = getClickedShape(event.getX(), event.getY());
 
-        /**
-         * Ifs for the line drawing
-         */
-        } else if (drawingLine && clickOnAShape(event.getX(), event.getY())){
+            // verify that the clicked shape is a Table
+            if (!(shape instanceof Table)
+                    // TODO: or the user clicked on the same shape 
+                    // TODO: or the user clicked on a shape that has a relation with the selected shape
+                    ) {
+                return;
+            }
+
             // if the user is drawing a line
             double x = event.getX();
             double y = event.getY();
-            Relation relation = new Relation(lineStartX, lineStartY, x, y);
-            shapes.add(relation);
-
             // TODO: open context menu
 
+            Relation relation = new Relation(lineStartX, lineStartY, x, y);
+            shapes.add(relation);
             drawShapes();
             drawingLine = false;
-        } else if (event.getClickCount() == 1 && clickOnAShape(event.getX(), event.getY())) {
-            // if the user is not drawing a line
+        } else if (event.getClickCount() == 1) {
+            Shape shape = getClickedShape(event.getX(), event.getY());
+
+            // verify that the clicked shape is a Table
+            if (!(shape instanceof Table)) {
+                return;
+            }
+
+            // if the user is not drawing a line,
             // start drawing a line
             lineStartX = event.getX();
             lineStartY = event.getY();
+
             drawingLine = true;
         }
     }
 
     /**
      * Check if the click is inside a shape
+     * 
      * @param x
      * @param y
      * @return
@@ -200,7 +221,23 @@ public class ModelerController {
     }
 
     /**
+     * Returns a shape if a shape is clicked
+     * 
+     * @param event
+     */
+    private Shape getClickedShape(double x, double y) {
+        for (Shape shape : shapes) {
+            if (shape.contains(x, y)) {
+                return shape;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Handle when the mouse is pressed
+     * 
      * @param event
      */
     private void handleMousePressed(MouseEvent event) {
@@ -214,6 +251,7 @@ public class ModelerController {
 
     /**
      * Handle when the mouse is dragged (moved)
+     * 
      * @param event
      */
     private void handleMouseDragged(MouseEvent event) {
@@ -229,6 +267,7 @@ public class ModelerController {
 
     /**
      * Handle when the mouse is released
+     * 
      * @param event
      */
     private void handleMouseReleased(MouseEvent event) {
@@ -251,6 +290,7 @@ public class ModelerController {
 
     /**
      * Get the shape at the given x and y
+     * 
      * @param x
      * @param y
      * @return
@@ -269,6 +309,7 @@ public class ModelerController {
     /**************************************************************************/
     /**
      * Exit Application
+     * 
      * @param event
      */
     public void exitApplication(ActionEvent event) {
