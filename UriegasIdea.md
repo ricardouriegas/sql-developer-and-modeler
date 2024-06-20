@@ -7,7 +7,7 @@ Tenemos X cantidad de tablas, por lo que deberiamos usar Hashmaps para establece
 1. **Tabla**, con los siguientes atributos:
 
    - Nombre
-   - Atributos (Hashmap)
+   - Atributos (List<String>)
    - Llave Primaria
    - Relaciones (Objeto Relacion)
 

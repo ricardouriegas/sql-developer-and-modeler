@@ -34,12 +34,14 @@ public class Relation implements Shape {
 
     @Override
     public void draw(GraphicsContext gc) {
+        // draw the line
         gc.setStroke(Color.RED);
         gc.strokeLine(startX, startY, endX, endY);
     }
 
     @Override
     public void move(double deltaX, double deltaY) {
+        // basically move the start and end points
         this.startX += deltaX;
         this.startY += deltaY;
         this.endX += deltaX;
@@ -48,6 +50,7 @@ public class Relation implements Shape {
 
     @Override
     public boolean contains(double x, double y) {
+        // check if the point is near the line (with near i mean CLICK_TOLERANCE value)
         double distance = pointLineDistance(startX, startY, endX, endY, x, y);
         return distance < CLICK_TOLERANCE;
     }

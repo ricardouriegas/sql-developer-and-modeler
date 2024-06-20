@@ -1,6 +1,5 @@
 package sql.ide.shapes;
 
-import java.util.HashMap;
 import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -14,7 +13,7 @@ public class Table implements Shape {
 
     // for table
     private String name;
-    private HashMap<String, String> attributes;
+    private List<String> attributes;
     private Object primaryKey;
     private List<Relation> foreignKeys;
 
@@ -35,11 +34,11 @@ public class Table implements Shape {
         this.name = name;
     }
 
-    public HashMap<String, String> getAttributes() {
+    public List<String> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(HashMap<String, String> attributes) {
+    public void setAttributes(List<String> attributes) {
         this.attributes = attributes;
     }
 
@@ -77,6 +76,7 @@ public class Table implements Shape {
 
     @Override
     public boolean contains(double x, double y) {
+        // check if the point is inside the table
         return x >= this.x && x <= this.x + size
                 &&
                 y >= this.y && y <= this.y + size;

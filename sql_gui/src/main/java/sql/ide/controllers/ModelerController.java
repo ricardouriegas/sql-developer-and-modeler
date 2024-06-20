@@ -142,30 +142,38 @@ public class ModelerController {
      * @param event
      */
     private void handleMouseClicked(MouseEvent event) {
+
+        // if for the double click to create a table
         if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY){
             double x = event.getX();
             double y = event.getY();
             Table square = new Table(x - SQUARE_SIZE / 2, y - SQUARE_SIZE / 2, SQUARE_SIZE);
             shapes.add(square);
             drawShapes();
+        
+        // if for the right click
         } else if (event.getButton() == MouseButton.SECONDARY && clickOnAShape(event.getX(), event.getY())) {
-            System.out.println("Right click inside a shape");
-            // todo: create a line between two shapes
-            if (drawingLine) { // end drawing a line
-                Relation line = (Relation) selectedShape;
-                line.setEndX(event.getX());
-                line.setEndY(event.getY());
-                drawingLine = false;
-            } else { // start drawing a line
-                lineStartX = event.getX();
-                lineStartY = event.getY();
-                Relation line = new Relation(lineStartX, lineStartY, lineStartX, lineStartY);
-                shapes.add(line);
-                selectedShape = line;
-                drawingLine = true;
-            }
-            drawShapes();
+            // the user right clicked inside a shape
+            // TODO: open the context menu
+            System.out.println("Right click");
 
+        /**
+         * Ifs for the line drawing
+         */
+        } else if (drawingLine && clickOnAShape(event.getX(), event.getY())){
+            // if the user is drawing a line
+            double x = event.getX();
+            double y = event.getY();
+            Relation relation = new Relation(lineStartX, lineStartY, x, y);
+            shapes.add(relation);
+            drawShapes();
+            drawingLine = false;
+        } else if (event.getClickCount() == 1 && clickOnAShape(event.getX(), event.getY())) {
+            // if the user is not drawing a line
+            // start drawing a line
+            lineStartX = event.getX();
+            lineStartY = event.getY();
+            drawingLine = true;
         }
     }
 
