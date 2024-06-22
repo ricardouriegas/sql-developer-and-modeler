@@ -19,6 +19,7 @@ public class TableEditor {
     private CheckBox primaryUIDCheckBox; // CheckBox for the primary UID of the attribute
     private CheckBox mandatoryCheckBox; // CheckBox for the mandatory of the attribute
     private Button addButton; // Button to add an attribute
+    private Button editButton; // Button to edit an attribute
     private Button deleteButton; // Button to delete an attribute
     private VBox rightBox; // VBox for attribute properties
     private VBox attributesBox; // VBox for attribute table and buttons
@@ -134,12 +135,14 @@ public class TableEditor {
                 primaryKeyColumn);
 
         addButton = new Button("Add");
+        editButton = new Button("Edit");
         deleteButton = new Button("Delete");
 
         addButton.setOnAction(event -> addAttribute());
+        editButton.setOnAction(event -> editAttribute());
         deleteButton.setOnAction(event -> deleteAttribute());
 
-        HBox buttonBox = new HBox(5, addButton, deleteButton);
+        HBox buttonBox = new HBox(5, addButton, editButton, deleteButton);
         attributesBox = new VBox(5, attributesTable, buttonBox);
         attributesBox.setPrefWidth(250);
 
@@ -154,13 +157,6 @@ public class TableEditor {
                 clearAttributeFields();
             }
         });
-
-        // Listeners to update attribute dynamically
-        nameField.textProperty().addListener((obs, oldText, newText) -> updateSelectedAttribute());
-        dataTypeComboBox.valueProperty().addListener((obs, oldType, newType) -> updateSelectedAttribute());
-        lengthField.textProperty().addListener((obs, oldText, newText) -> updateSelectedAttribute());
-        primaryUIDCheckBox.selectedProperty().addListener((obs, oldSelected, newSelected) -> updateSelectedAttribute());
-        mandatoryCheckBox.selectedProperty().addListener((obs, oldSelected, newSelected) -> updateSelectedAttribute());
     }
 
     private void initializeRelationshipsMenu() {
@@ -230,6 +226,46 @@ public class TableEditor {
         }
     }
 
+    private void editAttribute() {
+        Attribute selectedAttribute = attributesTable.getSelectionModel().getSelectedItem();
+        if (selectedAttribute == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("No attribute selected for editing.");
+            alert.showAndWait();
+            return;
+        }
+
+        String name = nameField.getText();
+        String dataType = dataTypeComboBox.getValue();
+        boolean isMandatory = mandatoryCheckBox.isSelected();
+        boolean isPrimaryKey = primaryUIDCheckBox.isSelected();
+        String length = lengthField.getText();
+
+        if (name.isEmpty() || dataType == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Name and Data Type are required.");
+            alert.showAndWait();
+            return;
+        }
+
+        String fullDataType = dataType;
+        if (!length.isEmpty() && lengthField.isVisible()) {
+            fullDataType += "(" + length + ")";
+        }
+
+        selectedAttribute.setName(name);
+        selectedAttribute.setDataType(fullDataType);
+        selectedAttribute.setMandatory(isMandatory);
+        selectedAttribute.setPrimaryKey(isPrimaryKey);
+
+        attributesTable.refresh();
+        clearAttributeFields();
+    }
+
     private void reindexAttributes() {
         int index = 1;
         for (Attribute attribute : attributesTable.getItems()) {
@@ -260,33 +296,6 @@ public class TableEditor {
         lengthField.setVisible(false);
         primaryUIDCheckBox.setSelected(false);
         mandatoryCheckBox.setSelected(false);
-    }
-
-    private void updateSelectedAttribute() {
-        Attribute selectedAttribute = attributesTable.getSelectionModel().getSelectedItem();
-        if (selectedAttribute != null) {
-            String name = nameField.getText();
-            String dataType = dataTypeComboBox.getValue();
-            boolean isMandatory = mandatoryCheckBox.isSelected();
-            boolean isPrimaryKey = primaryUIDCheckBox.isSelected();
-            String length = lengthField.getText();
-
-            if (name.isEmpty() || dataType == null) {
-                return;
-            }
-
-            String fullDataType = dataType;
-            if (!length.isEmpty() && lengthField.isVisible()) {
-                fullDataType += "(" + length + ")";
-            }
-
-            selectedAttribute.setName(name);
-            selectedAttribute.setDataType(fullDataType);
-            selectedAttribute.setMandatory(isMandatory);
-            selectedAttribute.setPrimaryKey(isPrimaryKey);
-
-            attributesTable.refresh();
-        }
     }
 
     public void show() {
