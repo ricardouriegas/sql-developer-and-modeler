@@ -64,4 +64,4 @@ La aplicación será evaluada en base a los siguientes criterios:
 
 # Ideas
 
-- [ ] [Idea de Uriegas](UriegasIdea.md)
+- [ ] [Notas](notas.md)

@@ -33,3 +33,22 @@ nombre_tabla_1: {
 
 # Joshua notes
 ## Menús 
+Teniendo en cuenta que cada tabla debe contar con su **menu individual**, propongo una clase llamada `TableEditor.java`, la cual contiene toda la interfaz gráfica para editar valores de la tabla, pero, **¿qué** se va a poder modificar?
+
+Bueno, mi idea es que se tengan 3 submenús: 
+1. **General:**
+   
+   En este menú se modificará el nombre de la tabla, así como otros atributos que vayan surgiendo y que sea necesario atender y no entren en las siguientes categorías.
+2. **Atributos:**
+   Este menú nos permite: 
+   - Agregar atributos
+   - Eliminar atributos
+   - Editar atributos
+   
+   Adicionalmente, también despliega opciones como añadir **longitud** a tipos de dato, marcar si es una **primary key** o no, y si dicho argumento es **obligatorio** o no.
+3. **Relaciones:**
+   Esta opción nos permite: 
+   - Establecer la `cardinalidad` de las relaciones.
+   - Establecer la `opcionalidad` de las relaciones.
+   
+   La idea que tengo pensada para esto es que se presenten todas las relaciones en una tabla, con la tabla de **origen** por un lado, y la tabla **destino** en otra casilla. Una vez se muestren las relaciones, el usuario podrá clickear en alguna para modificar la `cardinalidad` y la `opcionalidad` de la misma.
