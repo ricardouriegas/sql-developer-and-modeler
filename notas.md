@@ -30,3 +30,6 @@ nombre_tabla_1: {
  **Nota**: _Se tendria que hacer una validacion, cuando se realize la creacion de una tabla, para que no exista una tabla con el mismo nombre. (ya que el nombre seria basicamente el id de la tabla)_
 
 [UML Representativo de Uriegas](representacionUriegas.uxf)
+
+# Joshua notes
+## Menús 

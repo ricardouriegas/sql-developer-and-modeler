@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sql.ide.controllers.FileEditorController;
+import sql.ide.utils.TableEditor;
 
 /**
  * JavaFX App
@@ -30,6 +31,10 @@ public class App extends Application {
             // exitApplication function on FileEditorController
             event -> ((FileEditorController) loader.getController()).closeApplication()
         );
+
+        TableEditor attributeEditor = new TableEditor();
+        attributeEditor.show();
+
         primaryStage.show();
     }
 
