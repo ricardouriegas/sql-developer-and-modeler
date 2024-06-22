@@ -31,6 +31,9 @@ public class TableEditor {
 
     private BorderPane mainLayout; // Main layout of the editor
 
+    /**
+     * Constructor
+     */
     public TableEditor() {
         stage = new Stage();
         stage.setTitle("Table editor");
@@ -38,12 +41,12 @@ public class TableEditor {
         // Main layout
         mainLayout = new BorderPane();
 
-        // Options box
+        // Options box (General, Attributes, Relationships)
         optionsBox = new VBox(10);
         optionsBox.setPrefWidth(150);
         optionsBox.setPadding(new Insets(10));
 
-        // Toggle buttons for the options
+        // Toggle buttons for the options (General, Attributes, Relationships)
         ToggleGroup toggleGroup = new ToggleGroup();
         ToggleButton generalButton = new ToggleButton("General");
         ToggleButton attributesButton = new ToggleButton("Attributes");
@@ -53,10 +56,12 @@ public class TableEditor {
         attributesButton.setToggleGroup(toggleGroup);
         relationshipsButton.setToggleGroup(toggleGroup);
 
+        // Set actions for the buttons to show the corresponding menu
         generalButton.setOnAction(event -> showGeneralMenu());
         attributesButton.setOnAction(event -> showAttributesMenu());
         relationshipsButton.setOnAction(event -> showRelationshipsMenu());
 
+        // Add buttons to the options box
         optionsBox.getChildren().addAll(generalButton, attributesButton, relationshipsButton);
 
         // Initialize components for each menu
@@ -79,17 +84,22 @@ public class TableEditor {
         // TODO: Add elements for the General menu
     }
 
+    /**
+     * Initialize the components for the Attributes menu
+     */
     private void initializeAttributesMenu() {
-        nameField = new TextField();
-        nameField.setPromptText("Name");
+        nameField = new TextField(); // Create a new TextField for the name of the attribute
+        nameField.setPromptText("Name"); // Set a placeholder text for the field
 
+        // Create a ComboBox for the data type of the attribute
         dataTypeComboBox = new ComboBox<>();
-        dataTypeComboBox.getItems().addAll("Varchar", "Integer", "Float", "Boolean", "Double");
-        dataTypeComboBox.setPromptText("Select Data Type");
+        dataTypeComboBox.getItems().addAll("Varchar", "Integer", "Float", "Boolean", "Double"); // ! Data types
+        dataTypeComboBox.setPromptText("Select Data Type"); // Set a placeholder text for the ComboBox
         dataTypeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null)
                 return;
 
+            // ? Show the length field if the data type is Double, Float, Integer or Varchar
             if (newValue.equals("Double") || newValue.equals("Float") || newValue.equals("Integer")
                     || newValue.equals("Varchar")) {
                 lengthField.setVisible(true);
@@ -98,12 +108,13 @@ public class TableEditor {
             }
         });
 
+        // Create a TextField for the length of the attribute
         lengthField = new TextField();
         lengthField.setPromptText("Length");
-        lengthField.setVisible(false);
+        lengthField.setVisible(false); // Hide the length field by default until a data type is selected
 
-        primaryUIDCheckBox = new CheckBox("Primary UID");
-        mandatoryCheckBox = new CheckBox("Mandatory");
+        primaryUIDCheckBox = new CheckBox("Primary UID"); // Create a CheckBox for the primary UID of the attribute
+        mandatoryCheckBox = new CheckBox("Mandatory"); // Create a CheckBox for the mandatory of the attribute
 
         rightBox = new VBox(10);
         rightBox.setPrefWidth(300);
@@ -114,42 +125,50 @@ public class TableEditor {
                 lengthField,
                 primaryUIDCheckBox, mandatoryCheckBox);
 
+        // Create a TableView for the attributes
         attributesTable = new TableView<>();
 
-        TableColumn<Attribute, Integer> numberColumn = new TableColumn<>("#");
-        numberColumn.setCellValueFactory(new PropertyValueFactory<>("number"));
+        // * Create columns for the attributes table
 
-        TableColumn<Attribute, String> nameColumn = new TableColumn<>("Name");
+        TableColumn<Attribute, Integer> numberColumn = new TableColumn<>("#"); // Create a column for the number of the attribute
+        numberColumn.setCellValueFactory(new PropertyValueFactory<>("number")); 
+
+        TableColumn<Attribute, String> nameColumn = new TableColumn<>("Name"); // Create a column for the name of the attribute
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<Attribute, String> dataTypeColumn = new TableColumn<>("Data Type");
+        TableColumn<Attribute, String> dataTypeColumn = new TableColumn<>("Data Type"); // Create a column for the data type of the attribute
         dataTypeColumn.setCellValueFactory(new PropertyValueFactory<>("dataType"));
 
-        TableColumn<Attribute, Boolean> mandatoryColumn = new TableColumn<>("Mandatory");
+        TableColumn<Attribute, Boolean> mandatoryColumn = new TableColumn<>("Mandatory"); // Create a column for the mandatory of the attribute
         mandatoryColumn.setCellValueFactory(new PropertyValueFactory<>("mandatory"));
 
-        TableColumn<Attribute, Boolean> primaryKeyColumn = new TableColumn<>("Primary Key");
+        TableColumn<Attribute, Boolean> primaryKeyColumn = new TableColumn<>("Primary Key"); // Create a column for the primary key of the attribute
         primaryKeyColumn.setCellValueFactory(new PropertyValueFactory<>("primaryKey"));
 
         attributesTable.getColumns().addAll(numberColumn, nameColumn, dataTypeColumn, mandatoryColumn,
-                primaryKeyColumn);
+                primaryKeyColumn); // Add the columns to the table
 
-        addButton = new Button("Add");
+        // Create buttons for adding, editing and deleting attributes
+        addButton = new Button("Add"); 
         editButton = new Button("Edit");
         deleteButton = new Button("Delete");
 
-        addButton.setOnAction(event -> addAttribute());
+        // Set actions for the buttons
+        addButton.setOnAction(event -> addAttribute()); 
         editButton.setOnAction(event -> editAttribute());
         deleteButton.setOnAction(event -> deleteAttribute());
 
+        // Create an HBox for the buttons
         HBox buttonBox = new HBox(5, addButton, editButton, deleteButton);
         attributesBox = new VBox(5, attributesTable, buttonBox);
         attributesBox.setPrefWidth(250);
 
+        // Create a BorderPane for the attributes menu
         attributesLayout = new BorderPane();
         attributesLayout.setLeft(rightBox);
         attributesLayout.setCenter(attributesBox);
 
+        // Add a listener to the table to load the selected attribute
         attributesTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 loadAttribute(newSelection);
@@ -159,6 +178,9 @@ public class TableEditor {
         });
     }
 
+    /**
+     * Initialize the components for the Relationships menu
+      */
     private void initializeRelationshipsMenu() {
         relationshipsBox = new VBox();
         relationshipsBox.setPadding(new Insets(10));
@@ -166,18 +188,30 @@ public class TableEditor {
         // TODO: Add elements for the Relationships menu
     }
 
+    /**
+     * Show the General menu
+      */
     public void showGeneralMenu() {
         mainLayout.setCenter(generalBox);
     }
 
+    /**
+     * Show the Attributes menu
+      */
     public void showAttributesMenu() {
         mainLayout.setCenter(attributesLayout);
     }
 
+    /**
+     * Show the Relationships menu
+      */
     public void showRelationshipsMenu() {
         mainLayout.setCenter(relationshipsBox);
     }
 
+    /**
+     * Add an attribute to the table
+      */
     private void addAttribute() {
         String name = nameField.getText();
         String dataType = dataTypeComboBox.getValue();
@@ -212,6 +246,9 @@ public class TableEditor {
         clearAttributeFields();
     }
 
+    /**
+     * Delete the selected attribute from the table
+      */
     private void deleteAttribute() {
         Attribute selectedAttribute = attributesTable.getSelectionModel().getSelectedItem();
         if (selectedAttribute != null) {
@@ -226,6 +263,9 @@ public class TableEditor {
         }
     }
 
+    /**
+     * Edit the selected attribute in the table
+      */
     private void editAttribute() {
         Attribute selectedAttribute = attributesTable.getSelectionModel().getSelectedItem();
         if (selectedAttribute == null) {
@@ -274,6 +314,10 @@ public class TableEditor {
         attributesTable.refresh();
     }
 
+    /**
+     * Load the selected attribute into the input fields
+     * @param attribute
+     */
     private void loadAttribute(Attribute attribute) {
         nameField.setText(attribute.getName());
         String dataType = attribute.getDataType();
@@ -289,6 +333,9 @@ public class TableEditor {
         mandatoryCheckBox.setSelected(attribute.isMandatory());
     }
 
+    /**
+     * Clear the input fields for the attributes
+      */
     private void clearAttributeFields() {
         nameField.clear();
         dataTypeComboBox.getSelectionModel().clearSelection();
