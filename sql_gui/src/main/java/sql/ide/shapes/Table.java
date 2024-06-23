@@ -4,6 +4,7 @@ import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import sql.ide.utils.SquareMenu;
 
 public class Table implements Shape {
     // shape variables
@@ -16,6 +17,7 @@ public class Table implements Shape {
     private List<String> attributes;
     private Object primaryKey;
     private List<Relation> foreignKeys;
+    private SquareMenu contextMenu = new SquareMenu();
 
     /**
      * Constructor
@@ -28,6 +30,20 @@ public class Table implements Shape {
         this.x = x;
         this.y = y;
         this.size = size;
+    }
+
+    /**
+     * Method to open the context menu
+      */
+    public void openMenu() {
+        contextMenu.show();
+    }
+
+    /**
+     * Method to close the context menu
+      */
+    public void closeMenu() {
+        contextMenu.hide();
     }
 
     /**************************************************************************/

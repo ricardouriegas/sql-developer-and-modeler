@@ -7,7 +7,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-public class TableEditor {
+public class SquareMenu {
     private Stage stage; // Main stage
     private VBox optionsBox; // VBox for the options of the editor (General, Attributes, Relationships)
 
@@ -34,7 +34,7 @@ public class TableEditor {
     /**
      * Constructor
      */
-    public TableEditor() {
+    public SquareMenu() {
         stage = new Stage();
         stage.setTitle("Table editor");
 

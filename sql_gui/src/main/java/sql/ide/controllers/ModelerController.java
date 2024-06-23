@@ -16,7 +16,9 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import sql.ide.shapes.*;
+import sql.ide.shapes.Relation;
+import sql.ide.shapes.Shape;
+import sql.ide.shapes.Table;
 
 public class ModelerController {
     @FXML
@@ -39,7 +41,14 @@ public class ModelerController {
     @FXML
     public void initialize() {
         // listeners
-        canva.addEventHandler(MouseEvent.MOUSE_CLICKED, this::handleMouseClicked);
+        canva.addEventHandler(MouseEvent.MOUSE_CLICKED, arg0 -> {
+            try {
+                handleMouseClicked(arg0);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
         canva.addEventHandler(MouseEvent.MOUSE_PRESSED, this::handleMousePressed);
         canva.addEventHandler(MouseEvent.MOUSE_DRAGGED, this::handleMouseDragged);
         canva.addEventHandler(MouseEvent.MOUSE_RELEASED, this::handleMouseReleased);
@@ -146,24 +155,40 @@ public class ModelerController {
      * Handle when the mouse is clicked
      * 
      * @param event
+     * @throws InterruptedException 
      */
-    private void handleMouseClicked(MouseEvent event) {
+    private void handleMouseClicked(MouseEvent event) throws InterruptedException {
 
         // if for the double click to create a table
         if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
             double x = event.getX();
             double y = event.getY();
-            // todo: open context menu
 
             Table square = new Table(x - SQUARE_SIZE / 2, y - SQUARE_SIZE / 2, SQUARE_SIZE);
             shapes.add(square);
             drawShapes();
 
+            Thread.sleep(500); // We wait for the square to be drawn
+            square.openMenu(); // We open the context menu
+
             // if for the right click
-        } else if (event.getButton() == MouseButton.SECONDARY && clickOnAShape(event.getX(), event.getY())) {
+        } else if (event.getButton() == MouseButton.SECONDARY) {
+
+            // get the shape that was clicked
+            Shape shape = getClickedShape(event.getX(), event.getY());
+
+            // if the user right clicked outside a shape then we return
+            if(shape == null) 
+                return;
+            
+            if(shape instanceof Table) // if the user right clicked inside a table then we open the context menu
+                ((Table)shape).openMenu();
+            
+
             // the user right clicked inside a shape
             // TODO: open the context menu
 
+            
             /**
              * If's for the line drawing
              */
@@ -211,13 +236,13 @@ public class ModelerController {
      * @param y
      * @return
      */
-    private boolean clickOnAShape(double x, double y) {
-        for (Shape shape : shapes) {
-            if (shape.contains(x, y)) {
-                return true;
-            }
-        }
-        return false;
+    private Shape getShape(double x, double y) {
+        for (Shape shape : shapes)
+            if (shape.contains(x, y)) 
+                return shape;
+            
+        
+        return null;
     }
 
     /**
