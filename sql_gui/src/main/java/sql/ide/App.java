@@ -8,7 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sql.ide.controllers.FileEditorController;
-import sql.ide.utils.SquareMenu;
+import sql.ide.shapes.table_utilities.SquareMenu;
 
 /**
  * JavaFX App

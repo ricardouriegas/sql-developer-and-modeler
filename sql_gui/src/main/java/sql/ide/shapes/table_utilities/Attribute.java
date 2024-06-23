@@ -1,4 +1,4 @@
-package sql.ide.utils;
+package sql.ide.shapes.table_utilities;
 
 /**
  * This class represents an attribute of a table.

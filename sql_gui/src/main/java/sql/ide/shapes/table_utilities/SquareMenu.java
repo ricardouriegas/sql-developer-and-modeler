@@ -1,4 +1,4 @@
-package sql.ide.utils;
+package sql.ide.shapes.table_utilities;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
