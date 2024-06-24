@@ -329,6 +329,18 @@ public class ModelerController {
         return null;
     }
 
+    /**
+     * Deletes the shape at given coords
+     * @param x
+     * @param y
+     */
+    private void deleteShape(Double x, Double y){
+        Shape shape = getShape(x, y);
+        if (shape != null) {
+            shapes.remove(shape);
+        }
+    }
+
     /**************************************************************************/
     /********************************* Exit ***********************************/
     /**************************************************************************/

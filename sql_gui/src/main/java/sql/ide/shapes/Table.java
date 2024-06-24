@@ -4,6 +4,7 @@ import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import sql.ide.controllers.ModelerController;
 import sql.ide.shapes.table_utilities.SquareMenu;
 
 public class Table implements Shape {
@@ -17,7 +18,7 @@ public class Table implements Shape {
     private List<String> attributes;
     private Object primaryKey;
     private List<Relation> foreignKeys;
-    private SquareMenu contextMenu = new SquareMenu();
+    private final SquareMenu contextMenu = new SquareMenu(this);
 
     /**
      * Constructor
@@ -130,5 +131,12 @@ public class Table implements Shape {
         return x >= this.x && x <= this.x + size
                 &&
                 y >= this.y && y <= this.y + size;
+    }
+
+    /**************************************************************************/
+    /************************ OTHER METHODS *******************************/
+    /**************************************************************************/
+    public void deleteShapeFromController(){
+        //TODO: WIP
     }
 }

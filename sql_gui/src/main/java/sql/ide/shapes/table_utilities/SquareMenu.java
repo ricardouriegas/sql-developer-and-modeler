@@ -6,10 +6,20 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import sql.ide.shapes.Shape;
+import sql.ide.shapes.Table;
 
 public class SquareMenu {
+    Table table; // Reference obtained table, all changes in this instance of table also affects the original one
+
     private Stage stage; // Main stage
     private VBox optionsBox; // VBox for the options of the editor (General, Attributes, Relationships)
+
+    // General menu variables
+    private VBox generalBox; // VBox for General menu
+    private BorderPane generalLayout;
+    private TextField tableNameField; // Field for the name of the table
+    // End of General menu variables
 
     // Attributes menu
     private TableView<Attribute> attributesTable; // Table for the attributes (number, name, data type)
@@ -26,7 +36,6 @@ public class SquareMenu {
     private BorderPane attributesLayout; // Layout for attributes menu
     // End of attributes menu
 
-    private VBox generalBox; // VBox for General menu
     private VBox relationshipsBox; // VBox for Relationships menu
 
     private BorderPane mainLayout; // Main layout of the editor
@@ -34,7 +43,8 @@ public class SquareMenu {
     /**
      * Constructor
      */
-    public SquareMenu() {
+    public SquareMenu(Table table) {
+        this.table = table;
         stage = new Stage();
         stage.setTitle("Table editor");
 
@@ -77,11 +87,24 @@ public class SquareMenu {
         stage.setScene(scene);
     }
 
+    /**
+     * Initialize the components for the General Menu
+     */
     private void initializeGeneralMenu() {
-        generalBox = new VBox();
-        generalBox.setPadding(new Insets(10));
-        generalBox.setMaxWidth(300);
         // TODO: Add elements for the General menu
+        Label nameLabel = new Label("Table Name:"); // A simple label
+        tableNameField = new TextField(); // Create a new TextField for the name of the table
+        tableNameField.setPromptText("Table Name"); // Setting a placeholder text
+
+        Button deleteTableButton = new Button("Delete Table");
+
+        generalBox = new VBox(10);
+        generalBox.setPrefWidth(150);
+        generalBox.setPadding(new Insets(10));
+        generalBox.getChildren().addAll(nameLabel, tableNameField, deleteTableButton);
+
+        generalLayout = new BorderPane();
+        generalLayout.setLeft(generalBox);
     }
 
     /**
@@ -343,6 +366,13 @@ public class SquareMenu {
         lengthField.setVisible(false);
         primaryUIDCheckBox.setSelected(false);
         mandatoryCheckBox.setSelected(false);
+    }
+
+    /**
+     * TODO: WIP
+     */
+    private void deleteTable(){
+        table.deleteShapeFromController();
     }
 
     public void show() {
