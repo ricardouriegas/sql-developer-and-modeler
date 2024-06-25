@@ -162,10 +162,6 @@ public class ModelerController {
             square.setContextMenu(new SquareMenu(square, this));
             shapes.add(square);
             drawShapes();
-
-            try {
-                Thread.sleep(500); // We wait for the square to be drawn
-            } catch (Exception e) {}
             
             square.openMenu(); // We open the context menu
             // if for the right click
