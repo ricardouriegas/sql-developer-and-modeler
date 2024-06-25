@@ -298,6 +298,7 @@ public class ModelerController {
      */
     private void handleMouseDragged(MouseEvent event) {
         if (dragging && selectedShape != null) {
+            drawingLine = false;
             double deltaX = event.getX() - initialX;
             double deltaY = event.getY() - initialY;
             selectedShape.move(deltaX, deltaY);
