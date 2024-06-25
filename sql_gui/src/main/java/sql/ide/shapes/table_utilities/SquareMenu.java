@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sql.ide.controllers.ModelerController;
 import sql.ide.shapes.Table;
@@ -50,6 +51,9 @@ public class SquareMenu {
 
         stage = new Stage();
         stage.setTitle("Table editor");
+
+        // Set the stage to be a modal window so the user can't interact with the main window
+        stage.initModality(Modality.APPLICATION_MODAL);
 
         // Main layout
         mainLayout = new BorderPane();
@@ -119,7 +123,7 @@ public class SquareMenu {
     private void initializeAttributesMenu() {
         nameField = new TextField(); // Create a new TextField for the name of the attribute
         nameField.setPromptText("Name"); // Set a placeholder text for the field
-
+    
         // Create a ComboBox for the data type of the attribute
         dataTypeComboBox = new ComboBox<>();
         dataTypeComboBox.getItems().addAll("Varchar", "Integer", "Float", "Boolean", "Double"); // ! Data types
@@ -127,7 +131,7 @@ public class SquareMenu {
         dataTypeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null)
                 return;
-
+    
             // ? Show the length field if the data type is Double, Float, Integer or Varchar
             if (newValue.equals("Double") || newValue.equals("Float") || newValue.equals("Integer")
                     || newValue.equals("Varchar")) {
@@ -136,15 +140,26 @@ public class SquareMenu {
                 lengthField.setVisible(false);
             }
         });
-
+    
         // Create a TextField for the length of the attribute
         lengthField = new TextField();
         lengthField.setPromptText("Length");
         lengthField.setVisible(false); // Hide the length field by default until a data type is selected
-
+    
         primaryUIDCheckBox = new CheckBox("Primary UID"); // Create a CheckBox for the primary UID of the attribute
         mandatoryCheckBox = new CheckBox("Mandatory"); // Create a CheckBox for the mandatory of the attribute
-
+    
+        // Add a listener to the primaryUIDCheckBox
+        primaryUIDCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            //? If the primaryUIDCheckBox is selected, disable the mandatoryCheckBox
+            if (newValue) {
+                mandatoryCheckBox.setSelected(true); // Set the mandatoryCheckBox to true
+                mandatoryCheckBox.setDisable(true); // Disable the mandatoryCheckBox
+            } else {
+                mandatoryCheckBox.setDisable(false); // Enable the mandatoryCheckBox if the primaryUIDCheckBox is not selected
+            }
+        });
+    
         rightBox = new VBox(10);
         rightBox.setPrefWidth(300);
         rightBox.setPadding(new Insets(10));
@@ -153,50 +168,49 @@ public class SquareMenu {
                 new Label("Data Type:"), dataTypeComboBox,
                 lengthField,
                 primaryUIDCheckBox, mandatoryCheckBox);
-
+    
         // Create a TableView for the attributes
         attributesTable = new TableView<>();
-
+    
         // * Create columns for the attributes table
-
+    
         TableColumn<Attribute, Integer> numberColumn = new TableColumn<>("#"); // Create a column for the number of the attribute
         numberColumn.setCellValueFactory(new PropertyValueFactory<>("number")); 
-
+    
         TableColumn<Attribute, String> nameColumn = new TableColumn<>("Name"); // Create a column for the name of the attribute
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
+    
         TableColumn<Attribute, String> dataTypeColumn = new TableColumn<>("Data Type"); // Create a column for the data type of the attribute
         dataTypeColumn.setCellValueFactory(new PropertyValueFactory<>("dataType"));
-
+    
         TableColumn<Attribute, Boolean> mandatoryColumn = new TableColumn<>("Mandatory"); // Create a column for the mandatory of the attribute
         mandatoryColumn.setCellValueFactory(new PropertyValueFactory<>("mandatory"));
-
+    
         TableColumn<Attribute, Boolean> primaryKeyColumn = new TableColumn<>("Primary Key"); // Create a column for the primary key of the attribute
         primaryKeyColumn.setCellValueFactory(new PropertyValueFactory<>("primaryKey"));
-
-        attributesTable.getColumns().addAll(numberColumn, nameColumn, dataTypeColumn, mandatoryColumn,
-                primaryKeyColumn); // Add the columns to the table
-
+    
+        attributesTable.getColumns().addAll(numberColumn, nameColumn, dataTypeColumn, mandatoryColumn, primaryKeyColumn); // Add the columns to the table
+    
         // Create buttons for adding, editing and deleting attributes
         addButton = new Button("Add"); 
         editButton = new Button("Edit");
         deleteButton = new Button("Delete");
-
+    
         // Set actions for the buttons
         addButton.setOnAction(event -> addAttribute()); 
         editButton.setOnAction(event -> editAttribute());
         deleteButton.setOnAction(event -> deleteAttribute());
-
+    
         // Create an HBox for the buttons
         HBox buttonBox = new HBox(5, addButton, editButton, deleteButton);
         attributesBox = new VBox(5, attributesTable, buttonBox);
         attributesBox.setPrefWidth(250);
-
+    
         // Create a BorderPane for the attributes menu
         attributesLayout = new BorderPane();
         attributesLayout.setLeft(rightBox);
         attributesLayout.setCenter(attributesBox);
-
+    
         // Add a listener to the table to load the selected attribute
         attributesTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {

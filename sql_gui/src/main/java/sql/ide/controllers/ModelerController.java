@@ -23,16 +23,16 @@ import sql.ide.shapes.table_utilities.SquareMenu;
 
 public class ModelerController {
     @FXML
-    private Canvas canva;
+    private Canvas canva; // canvas
 
-    private double initialX;
-    private double initialY;
-    private boolean dragging = false;
-    private boolean drawingLine = false;
-    private double lineStartX;
-    private double lineStartY;
-    private Shape selectedShape;
-    private List<Shape> shapes = new ArrayList<>();
+    private double initialX; // initial x position of the shape
+    private double initialY; // initial y position of the shape
+    private boolean dragging = false; // is the shape being dragged
+    private boolean drawingLine = false; // is the user drawing a line
+    private double lineStartX; // start x position of the line
+    private double lineStartY; // start y position of the line
+    private Shape selectedShape; // selected shape (for dragging)
+    private List<Shape> shapes = new ArrayList<>(); // list of shapes
 
     private static final double SQUARE_SIZE = 50; // square size
 
@@ -291,9 +291,9 @@ public class ModelerController {
     public void drawShapes() {
         GraphicsContext gc = canva.getGraphicsContext2D();
         gc.clearRect(0, 0, canva.getWidth(), canva.getHeight());
-        for (Shape shape : shapes) {
+        for (Shape shape : shapes) 
             shape.draw(gc);
-        }
+        
     }
 
     /**
