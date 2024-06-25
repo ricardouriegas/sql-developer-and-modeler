@@ -181,9 +181,8 @@ public class ModelerController {
             if(shape instanceof Table) // if the user right clicked inside a table then we open the context menu
                 ((Table)shape).openMenu();
 
-            if(shape instanceof Relation){
+            if(shape instanceof Relation) // if the user right clicked inside a relation then we open the context menu
                 ((Relation)shape).openMenu();
-            }
             
             /**
              * If's for the line drawing
@@ -289,7 +288,7 @@ public class ModelerController {
     /**
      * Draw the shapes
      */
-    private void drawShapes() {
+    public void drawShapes() {
         GraphicsContext gc = canva.getGraphicsContext2D();
         gc.clearRect(0, 0, canva.getWidth(), canva.getHeight());
         for (Shape shape : shapes) {

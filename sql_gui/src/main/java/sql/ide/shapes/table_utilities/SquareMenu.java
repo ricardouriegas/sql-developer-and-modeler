@@ -90,14 +90,19 @@ public class SquareMenu {
      * Initialize the components for the General Menu
      */
     private void initializeGeneralMenu() {
-        // TODO: Add elements for the General menu
         Label nameLabel = new Label("Table Name:"); // A simple label
         tableNameField = new TextField(); // Create a new TextField for the name of the table
         tableNameField.setPromptText("Table Name"); // Setting a placeholder text
 
         Button deleteTableButton = new Button("Delete Table");
 
-        deleteTableButton.setOnAction(event -> deleteTable());
+        deleteTableButton.setOnAction(event -> deleteTable()); // Set an action for the delete button
+        
+        // Add a listener to the table name field to update the table name
+        tableNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            table.setName(newValue);
+            modelerController.drawShapes();
+        });
 
         generalBox = new VBox(10);
         generalBox.setPrefWidth(150);

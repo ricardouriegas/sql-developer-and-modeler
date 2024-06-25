@@ -123,6 +123,12 @@ public class Table implements Shape {
     public void draw(GraphicsContext gc) {
         gc.setFill(Color.rgb(125, 240, 255));
         gc.fillRect(x, y, size, size);
+
+        // Draw the title text
+        if (name != null && !name.isEmpty()) {
+            gc.setFill(Color.BLACK); // Set the color for the text
+            gc.fillText(name, x + size / 2 - (name.length() * 3), y - 10); // Draw the name text above the rectangle and center it
+        }
     }
 
     @Override
@@ -137,12 +143,5 @@ public class Table implements Shape {
         return x >= this.x && x <= this.x + size
                 &&
                 y >= this.y && y <= this.y + size;
-    }
-
-    /**************************************************************************/
-    /************************ OTHER METHODS *******************************/
-    /**************************************************************************/
-    public void deleteShapeFromController(){
-        //TODO: WIP
     }
 }
