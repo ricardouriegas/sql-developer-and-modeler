@@ -1,7 +1,9 @@
-package sql.ide.shapes;
+package sql.ide.shapes.relation_utilities;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import sql.ide.shapes.Shape;
+import sql.ide.shapes.Table;
 
 public class Relation implements Shape {
     // draw variables
@@ -13,23 +15,39 @@ public class Relation implements Shape {
     private static final double CLICK_TOLERANCE = 5; //? too hard to click a line so a little tolerance added
 
     // relation variables
-    private Table startTable;
-    private Table endTable;
+    private final Table startTable;
+    private final Table endTable;
     private String relationType;
+
+    private final LineMenu contextMenu = new LineMenu(this);
 
     /**
      * Constructor
      * 
-     * @param startX
-     * @param startY
-     * @param endX
-     * @param endY
+     * @param startTable
+     * @param endTable
      */
-    public Relation(double startX, double startY, double endX, double endY) {
-        this.startX = startX;
-        this.startY = startY;
-        this.endX = endX;
-        this.endY = endY;
+    public Relation(Table startTable, Table endTable) {
+        this.startTable = startTable;
+        this.endTable = endTable;
+        this.startX = startTable.getX();
+        this.startY = startTable.getY();
+        this.endX = endTable.getX();
+        this.endY = endTable.getY();
+        }
+
+    /**
+     * Method to open the context menu
+     */
+    public void openMenu() {
+        contextMenu.show();
+    }
+
+    /**
+     * Method to close the context menu
+     */
+    public void closeMenu() {
+        contextMenu.hide();
     }
 
     /**************************************************************************/
@@ -37,29 +55,29 @@ public class Relation implements Shape {
     /**************************************************************************/
 
     //? shape getters and setters
-    public void setEndX(double endX) {
-        this.endX = endX;
+    public double getStartX() {
+        return startX;
     }
 
-    public void setEndY(double endY) {
-        this.endY = endY;
+    public double getStartY() {
+        return startY;
+    }
+
+    public double getEndX() {
+        return endX;
+    }
+
+    public double getEndY() {
+        return endY;
     }
 
     //? relation getters and setters
-    public Table getStart() {
+    public Table getStartTable() {
         return startTable;
     }
 
-    public void setStart(Table startTable) {
-        this.startTable = startTable;
-    }
-
-    public Table getEnd() {
+    public Table getEndTable() {
         return endTable;
-    }
-
-    public void setEnd(Table endTable) {
-        this.endTable = endTable;
     }
 
     public String getRelationType() {
@@ -83,11 +101,11 @@ public class Relation implements Shape {
 
     @Override
     public void move(double deltaX, double deltaY) {
-        // // basically move the start and end points
-        // this.startX += deltaX;
-        // this.startY += deltaY;
-        // this.endX += deltaX;
-        // this.endY += deltaY;
+        // basically move the start and end points
+        this.startX += deltaX;
+        this.startY += deltaY;
+        this.endX += deltaX;
+        this.endY += deltaY;
     }
 
     @Override

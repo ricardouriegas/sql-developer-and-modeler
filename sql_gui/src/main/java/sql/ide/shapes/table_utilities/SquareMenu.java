@@ -6,7 +6,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import sql.ide.shapes.Shape;
 import sql.ide.shapes.Table;
 
 public class SquareMenu {
@@ -36,8 +35,6 @@ public class SquareMenu {
     private BorderPane attributesLayout; // Layout for attributes menu
     // End of attributes menu
 
-    private VBox relationshipsBox; // VBox for Relationships menu
-
     private BorderPane mainLayout; // Main layout of the editor
 
     /**
@@ -60,24 +57,20 @@ public class SquareMenu {
         ToggleGroup toggleGroup = new ToggleGroup();
         ToggleButton generalButton = new ToggleButton("General");
         ToggleButton attributesButton = new ToggleButton("Attributes");
-        ToggleButton relationshipsButton = new ToggleButton("Relationships");
 
         generalButton.setToggleGroup(toggleGroup);
         attributesButton.setToggleGroup(toggleGroup);
-        relationshipsButton.setToggleGroup(toggleGroup);
 
         // Set actions for the buttons to show the corresponding menu
         generalButton.setOnAction(event -> showGeneralMenu());
         attributesButton.setOnAction(event -> showAttributesMenu());
-        relationshipsButton.setOnAction(event -> showRelationshipsMenu());
 
         // Add buttons to the options box
-        optionsBox.getChildren().addAll(generalButton, attributesButton, relationshipsButton);
+        optionsBox.getChildren().addAll(generalButton, attributesButton);
 
         // Initialize components for each menu
         initializeGeneralMenu();
         initializeAttributesMenu();
-        initializeRelationshipsMenu();
 
         // Add elements to the main layout
         mainLayout.setLeft(optionsBox);
@@ -202,16 +195,6 @@ public class SquareMenu {
     }
 
     /**
-     * Initialize the components for the Relationships menu
-      */
-    private void initializeRelationshipsMenu() {
-        relationshipsBox = new VBox();
-        relationshipsBox.setPadding(new Insets(10));
-        relationshipsBox.setMaxWidth(300);
-        // TODO: Add elements for the Relationships menu
-    }
-
-    /**
      * Show the General menu
       */
     public void showGeneralMenu() {
@@ -223,13 +206,6 @@ public class SquareMenu {
       */
     public void showAttributesMenu() {
         mainLayout.setCenter(attributesLayout);
-    }
-
-    /**
-     * Show the Relationships menu
-      */
-    public void showRelationshipsMenu() {
-        mainLayout.setCenter(relationshipsBox);
     }
 
     /**
@@ -366,13 +342,6 @@ public class SquareMenu {
         lengthField.setVisible(false);
         primaryUIDCheckBox.setSelected(false);
         mandatoryCheckBox.setSelected(false);
-    }
-
-    /**
-     * TODO: WIP
-     */
-    private void deleteTable(){
-        table.deleteShapeFromController();
     }
 
     public void show() {

@@ -16,7 +16,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import sql.ide.shapes.Relation;
+import sql.ide.shapes.relation_utilities.Relation;
 import sql.ide.shapes.Shape;
 import sql.ide.shapes.Table;
 
@@ -183,35 +183,52 @@ public class ModelerController {
             
             if(shape instanceof Table) // if the user right clicked inside a table then we open the context menu
                 ((Table)shape).openMenu();
-            
 
-            // the user right clicked inside a shape
-            // TODO: open the context menu
-
+            if(shape instanceof Relation){
+                ((Relation)shape).openMenu();
+            }
             
             /**
              * If's for the line drawing
              */
         } else if (drawingLine) {
-            Shape shape = getClickedShape(event.getX(), event.getY());
+            // Create the shapes
+            Shape startShape = getClickedShape(lineStartX, lineStartY);
+            Shape endShape = getClickedShape(event.getX(), event.getY());
 
             // verify that the clicked shape is a Table
-            if (!(shape instanceof Table)
-                    // TODO: or the user clicked on the same shape 
-                    // TODO: or the user clicked on a shape that has a relation with the selected shape
-                    ) {
+            if (!(startShape instanceof Table && endShape instanceof Table)) {
+                drawingLine = false;
                 return;
             }
 
-            // if the user is drawing a line
-            double x = event.getX();
-            double y = event.getY();
-            // TODO: open context menu
+            // verify that the clicked shapes aren't the same
+            if(((Table) startShape).getX() == ((Table) endShape).getX()
+                    && ((Table) startShape).getY() == ((Table) endShape).getY()){
+                drawingLine = false;
+                return;
+            }
 
-            Relation relation = new Relation(lineStartX, lineStartY, x, y);
+            // verify that there isn't an existing relation between selected shapes
+            for(Shape shape : shapes){
+                if(shape instanceof Relation relation){
+                    if(relation.getStartTable() == startShape && relation.getEndTable() == endShape){
+                        drawingLine = false;
+                        return;
+                    }
+
+                    if(relation.getStartTable() == endShape && relation.getEndTable() == startShape){
+                        drawingLine = false;
+                        return;
+                    }
+                }
+            }
+
+            Relation relation = new Relation((Table) startShape, (Table) endShape);
             shapes.add(relation);
             drawShapes();
             drawingLine = false;
+            relation.openMenu();
         } else if (event.getClickCount() == 1) {
             Shape shape = getClickedShape(event.getX(), event.getY());
 
