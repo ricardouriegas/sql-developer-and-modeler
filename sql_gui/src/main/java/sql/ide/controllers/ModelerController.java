@@ -16,7 +16,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import sql.ide.shapes.relation_utilities.Relation;
+import sql.ide.shapes.Relation;
 import sql.ide.shapes.Shape;
 import sql.ide.shapes.Table;
 
@@ -175,7 +175,7 @@ public class ModelerController {
         } else if (event.getButton() == MouseButton.SECONDARY) {
 
             // get the shape that was clicked
-            Shape shape = getClickedShape(event.getX(), event.getY());
+            Shape shape = getShapeAt(event.getX(), event.getY());
 
             // if the user right clicked outside a shape then we return
             if(shape == null) 
@@ -193,8 +193,8 @@ public class ModelerController {
              */
         } else if (drawingLine) {
             // Create the shapes
-            Shape startShape = getClickedShape(lineStartX, lineStartY);
-            Shape endShape = getClickedShape(event.getX(), event.getY());
+            Shape startShape = getShapeAt(lineStartX, lineStartY);
+            Shape endShape = getShapeAt(event.getX(), event.getY());
 
             // verify that the clicked shape is a Table
             if (!(startShape instanceof Table && endShape instanceof Table)) {
@@ -230,7 +230,7 @@ public class ModelerController {
             drawingLine = false;
             relation.openMenu();
         } else if (event.getClickCount() == 1) {
-            Shape shape = getClickedShape(event.getX(), event.getY());
+            Shape shape = getShapeAt(event.getX(), event.getY());
 
             // verify that the clicked shape is a Table
             if (!(shape instanceof Table)) {
@@ -244,37 +244,6 @@ public class ModelerController {
 
             drawingLine = true;
         }
-    }
-
-    /**
-     * Check if the click is inside a shape
-     * 
-     * @param x
-     * @param y
-     * @return
-     */
-    private Shape getShape(double x, double y) {
-        for (Shape shape : shapes)
-            if (shape.contains(x, y)) 
-                return shape;
-            
-        
-        return null;
-    }
-
-    /**
-     * Returns a shape if a shape is clicked
-     * 
-     * @param event
-     */
-    private Shape getClickedShape(double x, double y) {
-        for (Shape shape : shapes) {
-            if (shape.contains(x, y)) {
-                return shape;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -353,7 +322,7 @@ public class ModelerController {
      * @param y
      */
     private void deleteShape(Double x, Double y){
-        Shape shape = getShape(x, y);
+        Shape shape = getShapeAt(x, y);
         if (shape != null) {
             shapes.remove(shape);
         }

@@ -5,7 +5,7 @@ sql/ide/controllers/FileEditorController.class
 sql/ide/controllers/FileEditorController$3.class
 sql/ide/controllers/FileEditorController$2.class
 sql/ide/App.class
-module-info.class
-sql/ide/shapes/Shape.class
 sql/ide/controllers/FileEditorController$1.class
+sql/ide/shapes/Shape.class
+module-info.class
 sql/ide/controllers/ModelerController.class

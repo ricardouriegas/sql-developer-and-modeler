@@ -1,9 +1,8 @@
-package sql.ide.shapes.relation_utilities;
+package sql.ide.shapes;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import sql.ide.shapes.Shape;
-import sql.ide.shapes.Table;
+import sql.ide.shapes.relation_utilities.LineMenu;
 
 public class Relation implements Shape {
     // draw variables

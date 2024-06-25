@@ -4,7 +4,6 @@ import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import sql.ide.shapes.relation_utilities.Relation;
 import sql.ide.shapes.table_utilities.SquareMenu;
 
 public class Table implements Shape {

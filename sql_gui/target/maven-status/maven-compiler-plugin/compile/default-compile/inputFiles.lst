@@ -1,7 +1,10 @@
-/home/jarrazola/Documents/sql-developer-and-modeler/sql_gui/src/main/java/module-info.java
-/home/jarrazola/Documents/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/App.java
-/home/jarrazola/Documents/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/controllers/FileEditorController.java
-/home/jarrazola/Documents/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/controllers/ModelerController.java
-/home/jarrazola/Documents/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/shapes/Relation.java
-/home/jarrazola/Documents/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/shapes/Shape.java
-/home/jarrazola/Documents/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/shapes/Table.java
+/home/richy/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/controllers/ModelerController.java
+/home/richy/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/shapes/Shape.java
+/home/richy/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/shapes/table_utilities/SquareMenu.java
+/home/richy/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/shapes/Relation.java
+/home/richy/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/shapes/table_utilities/Attribute.java
+/home/richy/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/shapes/Table.java
+/home/richy/sql-developer-and-modeler/sql_gui/src/main/java/module-info.java
+/home/richy/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/shapes/relation_utilities/LineMenu.java
+/home/richy/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/App.java
+/home/richy/sql-developer-and-modeler/sql_gui/src/main/java/sql/ide/controllers/FileEditorController.java
