@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import sql.ide.shapes.Relation;
 import sql.ide.shapes.Shape;
 import sql.ide.shapes.Table;
+import sql.ide.shapes.table_utilities.SquareMenu;
 
 public class ModelerController {
     @FXML
@@ -30,8 +31,8 @@ public class ModelerController {
     private boolean drawingLine = false;
     private double lineStartX;
     private double lineStartY;
-    private List<Shape> shapes = new ArrayList<>();
     private Shape selectedShape;
+    private List<Shape> shapes = new ArrayList<>();
 
     private static final double SQUARE_SIZE = 50; // square size
 
@@ -41,14 +42,7 @@ public class ModelerController {
     @FXML
     public void initialize() {
         // listeners
-        canva.addEventHandler(MouseEvent.MOUSE_CLICKED, arg0 -> {
-            try {
-                handleMouseClicked(arg0);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        });
+        canva.addEventHandler(MouseEvent.MOUSE_CLICKED, this::handleMouseClicked);
         canva.addEventHandler(MouseEvent.MOUSE_PRESSED, this::handleMousePressed);
         canva.addEventHandler(MouseEvent.MOUSE_DRAGGED, this::handleMouseDragged);
         canva.addEventHandler(MouseEvent.MOUSE_RELEASED, this::handleMouseReleased);
@@ -157,7 +151,7 @@ public class ModelerController {
      * @param event
      * @throws InterruptedException 
      */
-    private void handleMouseClicked(MouseEvent event) throws InterruptedException {
+    private void handleMouseClicked(MouseEvent event) {
 
         // if for the double click to create a table
         if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
@@ -165,12 +159,15 @@ public class ModelerController {
             double y = event.getY();
 
             Table square = new Table(x - SQUARE_SIZE / 2, y - SQUARE_SIZE / 2, SQUARE_SIZE);
+            square.setContextMenu(new SquareMenu(square, this));
             shapes.add(square);
             drawShapes();
 
-            Thread.sleep(500); // We wait for the square to be drawn
+            try {
+                Thread.sleep(500); // We wait for the square to be drawn
+            } catch (Exception e) {}
+            
             square.openMenu(); // We open the context menu
-
             // if for the right click
         } else if (event.getButton() == MouseButton.SECONDARY) {
 
@@ -321,11 +318,20 @@ public class ModelerController {
      * @param x
      * @param y
      */
-    private void deleteShape(Double x, Double y){
+    public void deleteShape(Double x, Double y){
         Shape shape = getShapeAt(x, y);
         if (shape != null) {
             shapes.remove(shape);
         }
+    }
+
+    /**
+     * Deletes a shape given the shape (not the coords)
+     * @param shape
+     */
+    public void deleteShape(Shape shape){
+        shapes.remove(shape);
+        drawShapes();
     }
 
     /**************************************************************************/
@@ -339,5 +345,4 @@ public class ModelerController {
     public void exitApplication(ActionEvent event) {
         System.exit(0);
     }
-
 }

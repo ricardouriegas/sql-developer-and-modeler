@@ -17,7 +17,7 @@ public class Table implements Shape {
     private List<String> attributes;
     private Object primaryKey;
     private List<Relation> foreignKeys;
-    private final SquareMenu contextMenu = new SquareMenu(this);
+    private SquareMenu contextMenu;
 
     /**
      * Constructor
@@ -108,6 +108,13 @@ public class Table implements Shape {
         this.foreignKeys = foreignKeys;
     }
 
+    public SquareMenu getContextMenu() {
+        return contextMenu;
+    }
+
+    public void setContextMenu(SquareMenu contextMenu) {
+        this.contextMenu = contextMenu;
+    }
     /**************************************************************************/
     /************************ INTERFACE METHODS *******************************/
     /**************************************************************************/

@@ -6,10 +6,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import sql.ide.controllers.ModelerController;
 import sql.ide.shapes.Table;
 
 public class SquareMenu {
-    Table table; // Reference obtained table, all changes in this instance of table also affects the original one
+    private Table table; // Reference obtained table, all changes in this instance of table also affects the original one
+    private ModelerController modelerController; // Reference to the modeler controller
 
     private Stage stage; // Main stage
     private VBox optionsBox; // VBox for the options of the editor (General, Attributes, Relationships)
@@ -39,9 +41,13 @@ public class SquareMenu {
 
     /**
      * Constructor
-     */
-    public SquareMenu(Table table) {
+     * @param table Table to edit
+     * @param modelerController Modeler controller instance
+      */
+    public SquareMenu(Table table, ModelerController modelerController) {
         this.table = table;
+        this.modelerController = modelerController;
+
         stage = new Stage();
         stage.setTitle("Table editor");
 
@@ -90,6 +96,8 @@ public class SquareMenu {
         tableNameField.setPromptText("Table Name"); // Setting a placeholder text
 
         Button deleteTableButton = new Button("Delete Table");
+
+        deleteTableButton.setOnAction(event -> deleteTable());
 
         generalBox = new VBox(10);
         generalBox.setPrefWidth(150);
@@ -342,6 +350,24 @@ public class SquareMenu {
         lengthField.setVisible(false);
         primaryUIDCheckBox.setSelected(false);
         mandatoryCheckBox.setSelected(false);
+    }
+
+    /**
+     * Delete the table from the modeler
+     * This method will show a confirmation dialog before deleting the table
+     * If the user confirms the deletion, the table will be removed from the modeler 
+      */
+    private void deleteTable() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Table");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to delete this table?");
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.OK) {
+            modelerController.deleteShape(table);
+            stage.close();
+        }
     }
 
     public void show() {
