@@ -148,9 +148,16 @@ public class Table implements Shape {
 
         // update the position of every relationship
         for(Relation relation : foreignKeys){
-            // update the line that connects to the table
-            relation.setStartX(relation.getStartX() + deltaX);
-            relation.setStartY(relation.getStartY() + deltaY);
+            if(relation.getStartTable() == this){
+                // update the line that connects to the table
+                relation.setStartX(relation.getStartX() + deltaX);
+                relation.setStartY(relation.getStartY() + deltaY);
+            }
+
+            if(relation.getEndTable() == this){
+                relation.setEndX(relation.getEndX() + deltaX);
+                relation.setEndY(relation.getEndY() + deltaY);
+            }
         }
     }
 

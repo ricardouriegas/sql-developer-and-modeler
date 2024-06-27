@@ -228,7 +228,6 @@ public class ModelerController {
             startTable.addRelation(relation);
             endTable.addRelation(relation);
 
-
             drawShapes();
             drawingLine = false;
             relation.openMenu();
@@ -256,7 +255,7 @@ public class ModelerController {
      */
     private void handleMousePressed(MouseEvent event) {
         selectedShape = getShapeAt(event.getX(), event.getY());
-        if (selectedShape != null) { // if a shape is selected
+        if (selectedShape != null && selectedShape instanceof Table) { // if a shape is selected
             initialX = event.getX();
             initialY = event.getY();
             dragging = true;
