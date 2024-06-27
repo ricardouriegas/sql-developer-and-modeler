@@ -201,23 +201,33 @@ public class ModelerController {
                 return;
             }
 
+            Table startTable = (Table) startShape;
+            Table endTable = (Table) endShape;
+
             // verify that there isn't an existing relation between selected shapes
             for(Shape shape : shapes){
                 if(shape instanceof Relation relation){
-                    if(relation.getStartTable() == startShape && relation.getEndTable() == endShape){
+                    if(relation.getStartTable() == startTable && relation.getEndTable() == endTable){
                         drawingLine = false;
                         return;
                     }
 
-                    if(relation.getStartTable() == endShape && relation.getEndTable() == startShape){
+                    if(relation.getStartTable() == endTable && relation.getEndTable() == startTable){
                         drawingLine = false;
                         return;
                     }
                 }
             }
 
-            Relation relation = new Relation((Table) startShape, (Table) endShape);
+            Relation relation = new Relation(startTable, endTable); // create the Relation
+            
+            // add relation to the shapes
             shapes.add(relation);
+            
+            // add relation to the tables
+            startTable.addRelation(relation);
+            endTable.addRelation(relation);
+
             drawShapes();
             drawingLine = false;
             relation.openMenu();
@@ -245,7 +255,7 @@ public class ModelerController {
      */
     private void handleMousePressed(MouseEvent event) {
         selectedShape = getShapeAt(event.getX(), event.getY());
-        if (selectedShape != null) { // if a shape is selected
+        if (selectedShape != null && selectedShape instanceof Table) { // if a shape is selected
             initialX = event.getX();
             initialY = event.getY();
             dragging = true;

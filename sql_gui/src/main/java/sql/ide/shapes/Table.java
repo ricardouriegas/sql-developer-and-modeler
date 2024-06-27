@@ -30,6 +30,7 @@ public class Table implements Shape {
         this.x = x;
         this.y = y;
         this.size = size;
+        foreignKeys = new java.util.ArrayList<>();
     }
 
     /**
@@ -115,6 +116,14 @@ public class Table implements Shape {
     public void setContextMenu(SquareMenu contextMenu) {
         this.contextMenu = contextMenu;
     }
+
+    /**************************************************************************/
+
+    /**************************************************************************/
+    public void addRelation(Relation relation) {
+        foreignKeys.add(relation);
+    }
+
     /**************************************************************************/
     /************************ INTERFACE METHODS *******************************/
     /**************************************************************************/
@@ -133,8 +142,23 @@ public class Table implements Shape {
 
     @Override
     public void move(double deltaX, double deltaY) {
+        // update the positions of the table
         this.x += deltaX;
         this.y += deltaY;
+
+        // update the position of every relationship
+        for(Relation relation : foreignKeys){
+            if(relation.getStartTable() == this){
+                // update the line that connects to the table
+                relation.setStartX(relation.getStartX() + deltaX);
+                relation.setStartY(relation.getStartY() + deltaY);
+            }
+
+            if(relation.getEndTable() == this){
+                relation.setEndX(relation.getEndX() + deltaX);
+                relation.setEndY(relation.getEndY() + deltaY);
+            }
+        }
     }
 
     @Override

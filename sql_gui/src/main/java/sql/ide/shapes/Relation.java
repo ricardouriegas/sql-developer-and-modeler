@@ -62,12 +62,28 @@ public class Relation implements Shape {
         return startY;
     }
 
+    public void setStartX(double deltaX) {
+        this.startX = deltaX;
+    }
+
+    public void setStartY(double deltaY) {
+        this.startY = deltaY;
+    }
+
     public double getEndX() {
         return endX;
     }
 
     public double getEndY() {
         return endY;
+    }
+
+    public void setEndX(double deltaX) {
+        this.endX = deltaX;
+    }
+
+    public void setEndY(double deltaY) {
+        this.endY = deltaY;
     }
 
     //? relation getters and setters
