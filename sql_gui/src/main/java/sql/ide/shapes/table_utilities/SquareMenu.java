@@ -126,15 +126,14 @@ public class SquareMenu {
     
         // Create a ComboBox for the data type of the attribute
         dataTypeComboBox = new ComboBox<>();
-        dataTypeComboBox.getItems().addAll("Varchar", "Integer", "Float", "Boolean", "Double"); // ! Data types
+        dataTypeComboBox.getItems().addAll("Varchar", "Integer", "Float", "Double"); // ! Data types
         dataTypeComboBox.setPromptText("Select Data Type"); // Set a placeholder text for the ComboBox
         dataTypeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null)
                 return;
     
             // ? Show the length field if the data type is Double, Float, Integer or Varchar
-            if (newValue.equals("Double") || newValue.equals("Float") || newValue.equals("Integer")
-                    || newValue.equals("Varchar")) {
+            if (newValue.equals("Double") || newValue.equals("Float") || newValue.equals("Varchar")) {
                 lengthField.setVisible(true);
             } else {
                 lengthField.setVisible(false);
@@ -389,10 +388,42 @@ public class SquareMenu {
         }
     }
 
+    /**
+     * Method to export the table to SQL
+     * @return SQL code to create the table
+      */
+    public String export(){
+        String export = "CREATE TABLE " + table.getName() + " (\n"; // SQL code to create the table
+
+        if (attributesTable.getItems().isEmpty()) // We cannot create a table without attributes
+            return "";
+        
+        // Iterate over the attributes to create the columns
+        for (Attribute attribute : attributesTable.getItems()) {
+            export += "\t" + attribute.getName() + " " + attribute.getDataType(); // Add the name and data type of the attribute
+            if (attribute.isPrimaryKey()) // If the attribute is a primary key, add PRIMARY KEY
+                export += " PRIMARY KEY";
+            
+            if (attribute.isMandatory()) // If the attribute is mandatory, add NOT NULL
+                export += " NOT NULL";
+            
+            export += ",\n";
+        }
+
+        export = export.substring(0, export.length() - 2) + "\n); \n\n" ; // Remove the last comma and add the closing parenthesis
+        return export; 
+    }
+
+    /**
+     * Method to show the editor
+      */
     public void show() {
         stage.show();
     }
 
+    /**
+     * Method to hide the editor
+      */
     public void hide() {
         stage.hide();
     }

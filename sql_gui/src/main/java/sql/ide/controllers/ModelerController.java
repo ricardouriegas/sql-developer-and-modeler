@@ -1,8 +1,10 @@
 package sql.ide.controllers;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileWriter;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +17,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sql.ide.shapes.Relation;
 import sql.ide.shapes.Shape;
@@ -72,11 +75,46 @@ public class ModelerController {
 
     /**
      * Export the file (export the model to a sql file)
-     * 
      * @param event
      */
     public void exportFile(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save SQL File");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("SQL Files", "*.sql"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
 
+        File file = fileChooser.showSaveDialog(new Stage());
+        if (file != null) {
+            String content = "";
+            for (Shape shape : shapes) {
+                if (shape instanceof Table) {
+                    content += (((Table) shape).getContextMenu().export());
+                }
+            }
+
+            if(content.equals("")){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("There are no tables to export.");
+                alert.showAndWait();
+                return;
+            }
+
+            if(!file.getName().endsWith(".sql"))
+                file = new File(file.getAbsolutePath() + ".sql");
+
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(content);
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("An error occurred while saving the file.");
+                alert.showAndWait();
+            }
+        }
     }
 
     /**
@@ -149,7 +187,7 @@ public class ModelerController {
      * Handle when the mouse is clicked
      * 
      * @param event
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     private void handleMouseClicked(MouseEvent event) {
 
@@ -162,7 +200,7 @@ public class ModelerController {
             square.setContextMenu(new SquareMenu(square, this));
             shapes.add(square);
             drawShapes();
-            
+
             square.openMenu(); // We open the context menu
             // if for the right click
         } else if (event.getButton() == MouseButton.SECONDARY) {
@@ -171,15 +209,15 @@ public class ModelerController {
             Shape shape = getShapeAt(event.getX(), event.getY());
 
             // if the user right clicked outside a shape then we return
-            if(shape == null) 
+            if (shape == null)
                 return;
-            
-            if(shape instanceof Table) // if the user right clicked inside a table then we open the context menu
-                ((Table)shape).openMenu();
 
-            if(shape instanceof Relation) // if the user right clicked inside a relation then we open the context menu
-                ((Relation)shape).openMenu();
-            
+            if (shape instanceof Table) // if the user right clicked inside a table then we open the context menu
+                ((Table) shape).openMenu();
+
+            if (shape instanceof Relation) // if the user right clicked inside a relation then we open the context menu
+                ((Relation) shape).openMenu();
+
             /**
              * If's for the line drawing
              */
@@ -195,8 +233,8 @@ public class ModelerController {
             }
 
             // verify that the clicked shapes aren't the same
-            if(((Table) startShape).getX() == ((Table) endShape).getX()
-                    && ((Table) startShape).getY() == ((Table) endShape).getY()){
+            if (((Table) startShape).getX() == ((Table) endShape).getX()
+                    && ((Table) startShape).getY() == ((Table) endShape).getY()) {
                 drawingLine = false;
                 return;
             }
@@ -205,14 +243,14 @@ public class ModelerController {
             Table endTable = (Table) endShape;
 
             // verify that there isn't an existing relation between selected shapes
-            for(Shape shape : shapes){
-                if(shape instanceof Relation relation){
-                    if(relation.getStartTable() == startTable && relation.getEndTable() == endTable){
+            for (Shape shape : shapes) {
+                if (shape instanceof Relation relation) {
+                    if (relation.getStartTable() == startTable && relation.getEndTable() == endTable) {
                         drawingLine = false;
                         return;
                     }
 
-                    if(relation.getStartTable() == endTable && relation.getEndTable() == startTable){
+                    if (relation.getStartTable() == endTable && relation.getEndTable() == startTable) {
                         drawingLine = false;
                         return;
                     }
@@ -220,10 +258,10 @@ public class ModelerController {
             }
 
             Relation relation = new Relation(startTable, endTable); // create the Relation
-            
+
             // add relation to the shapes
             shapes.add(relation);
-            
+
             // add relation to the tables
             startTable.addRelation(relation);
             endTable.addRelation(relation);
@@ -297,9 +335,9 @@ public class ModelerController {
     public void drawShapes() {
         GraphicsContext gc = canva.getGraphicsContext2D();
         gc.clearRect(0, 0, canva.getWidth(), canva.getHeight());
-        for (Shape shape : shapes) 
+        for (Shape shape : shapes)
             shape.draw(gc);
-        
+
     }
 
     /**
@@ -320,10 +358,11 @@ public class ModelerController {
 
     /**
      * Deletes the shape at given coords
+     * 
      * @param x
      * @param y
      */
-    public void deleteShape(Double x, Double y){
+    public void deleteShape(Double x, Double y) {
         Shape shape = getShapeAt(x, y);
         if (shape != null) {
             shapes.remove(shape);
@@ -332,9 +371,10 @@ public class ModelerController {
 
     /**
      * Deletes a shape given the shape (not the coords)
+     * 
      * @param shape
      */
-    public void deleteShape(Shape shape){
+    public void deleteShape(Shape shape) {
         shapes.remove(shape);
         drawShapes();
     }
