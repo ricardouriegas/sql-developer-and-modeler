@@ -58,12 +58,12 @@ public class LineMenu {
         originGrid.setHgap(10);
         originGrid.setVgap(5);
 
-        //Label originTableName = new Label("Origin Table:" + relation.getStartTable().getName());
+        Label originTableName = new Label("Origin Table: " + relation.getStartTable().getName());
         originCardinalityComboBox = new ComboBox<>();
         originCardinalityComboBox.getItems().addAll("1", "N");
         optionalOriginCheckBox = new CheckBox("Optional Origin");
 
-        //originGrid.add(originTableName, 0, 0);
+        originGrid.add(originTableName, 0, 3);
         originGrid.add(new Label("Cardinality from Origin to Destination:"), 0, 4);
         originGrid.add(originCardinalityComboBox, 1, 4);
         originGrid.add(optionalOriginCheckBox, 1, 5);
@@ -77,12 +77,12 @@ public class LineMenu {
         destinationGrid.setHgap(10);
         destinationGrid.setVgap(5);
 
-        //Label destinationTableName = new Label("Destination Table:" + relation.getEndTable().getName());
+        Label destinationTableName = new Label("Destination Table:" + relation.getEndTable().getName());
         destinationCardinalityComboBox = new ComboBox<>();
         destinationCardinalityComboBox.getItems().addAll("1", "N");
         optionalDestinationCheckBox = new CheckBox("Optional Destination");
 
-        //destinationGrid.add(destinationTableName, 0, 0);
+        destinationGrid.add(destinationTableName, 0, 3);
         destinationGrid.add(new Label("Cardinality from Destination to Origin:"), 0, 4);
         destinationGrid.add(destinationCardinalityComboBox, 1, 4);
         destinationGrid.add(optionalDestinationCheckBox, 1, 5);
