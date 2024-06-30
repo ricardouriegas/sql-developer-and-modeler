@@ -8,10 +8,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import sql.ide.controllers.ModelerController;
 import sql.ide.shapes.Relation;
 
 public class LineMenu {
-    Relation relation; // Reference obtained relation, all changes of this instance of relation also affect the original
+    private final Relation relation; // Reference obtained relation, all changes of this instance of relation also affect the original
+    private final ModelerController modelerController;
 
     private final Stage stage = new Stage();
     private final VBox relationBox = new VBox();
@@ -26,8 +28,10 @@ public class LineMenu {
      *
      * @param relation
      */
-    public LineMenu(Relation relation) {
+    public LineMenu(Relation relation, ModelerController modelerController) {
         this.relation = relation;
+        this.modelerController = modelerController;
+
         stage.setTitle("Relation Properties");
 
         initializePropertiesMenu();
@@ -83,7 +87,10 @@ public class LineMenu {
         destinationGrid.add(destinationCardinalityComboBox, 1, 4);
         destinationGrid.add(optionalDestinationCheckBox, 1, 5);
 
-        vbox.getChildren().addAll(originGrid, destinationGrid);
+        Button deleteTableButton = new Button("Delete Relation");
+        deleteTableButton.setOnAction(event -> deleteRelation());
+
+        vbox.getChildren().addAll(originGrid, destinationGrid, deleteTableButton);
         relationBox.getChildren().add(vbox);
 
         // Apply Changes when user closes window
@@ -125,6 +132,19 @@ public class LineMenu {
             alert.setContentText("A relationship cannot be obligatory on both sides.");
             alert.showAndWait();
             event.consume();
+        }
+    }
+
+    private void deleteRelation(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Relation");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to delete this relation?");
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.OK) {
+            modelerController.deleteShape(relation);
+            stage.close();
         }
     }
 
