@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import sql.ide.shapes.Relation;
 import sql.ide.shapes.Shape;
 import sql.ide.shapes.Table;
+import sql.ide.shapes.relation_utilities.LineMenu;
 import sql.ide.shapes.table_utilities.SquareMenu;
 
 public class ModelerController {
@@ -220,7 +221,8 @@ public class ModelerController {
             }
 
             Relation relation = new Relation(startTable, endTable); // create the Relation
-            
+            relation.setContextMenu(new LineMenu(relation, this));
+
             // add relation to the shapes
             shapes.add(relation);
             

@@ -18,7 +18,7 @@ public class Relation implements Shape {
     private final Table endTable;
     private String relationType;
 
-    private final LineMenu contextMenu = new LineMenu(this);
+    private LineMenu contextMenu;
 
     /**
      * Constructor
@@ -47,6 +47,10 @@ public class Relation implements Shape {
      */
     public void closeMenu() {
         contextMenu.hide();
+    }
+
+    public void setContextMenu(LineMenu contextMenu) {
+        this.contextMenu = contextMenu;
     }
 
     /**************************************************************************/
