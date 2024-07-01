@@ -1,10 +1,12 @@
 package sql.ide.shapes;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import sql.ide.shapes.table_utilities.SquareMenu;
+import sql.ide.shapes.table_utilities.Attribute;
 
 public class Table implements Shape {
     // shape variables
@@ -14,9 +16,8 @@ public class Table implements Shape {
 
     // table variables
     private String name;
-    private List<String> attributes;
-    private Object primaryKey;
-    private List<Relation> foreignKeys;
+    private List<Attribute> attributes = new ArrayList<>();
+    private List<Relation> foreignKeys; // List of foreign keys
     private SquareMenu contextMenu;
 
     /**
@@ -85,20 +86,12 @@ public class Table implements Shape {
         this.name = name;
     }
 
-    public List<String> getAttributes() {
+    public List<Attribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(List<String> attributes) {
+    public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
-    }
-
-    public Object getPrimaryKey() {
-        return primaryKey;
-    }
-
-    public void setPrimaryKey(Object primaryKey) {
-        this.primaryKey = primaryKey;
     }
 
     public List<Relation> getForeignKeys() {
@@ -122,6 +115,19 @@ public class Table implements Shape {
     /**************************************************************************/
     public void addRelation(Relation relation) {
         foreignKeys.add(relation);
+    }
+
+    /************************ ATTRIBUTE METHODS *******************************/
+    public void addAttribute(Attribute attribute) {
+        attributes.add(attribute);
+    }
+
+    public void removeAttribute(Attribute attribute) {
+        attributes.remove(attribute);
+    }
+
+    public Attribute getAttribute(Attribute attribute) {
+        return attributes.get(attributes.indexOf(attribute));
     }
 
     /**************************************************************************/
@@ -167,5 +173,32 @@ public class Table implements Shape {
         return x >= this.x && x <= this.x + size
                 &&
                 y >= this.y && y <= this.y + size;
+    }
+
+
+    /**************************************************************************/
+    /************************ EXPORT & IMPORT ********************************/
+    /**************************************************************************/
+
+    public String export(){
+        String export = "CREATE TABLE " + name + " (\n"; // SQL code to create the table
+
+        if (attributes.isEmpty()) // We cannot create a table without attributes
+            return "";
+        
+        // Iterate over the attributes to create the columns
+        for (Attribute attribute : attributes) {
+            export += "\t" + attribute.getName() + " " + attribute.getDataType(); // Add the name and data type of the attribute
+            if (attribute.isPrimaryKey()) // If the attribute is a primary key, add PRIMARY KEY
+                export += " PRIMARY KEY";
+            
+            if (attribute.isMandatory()) // If the attribute is mandatory, add NOT NULL
+                export += " NOT NULL";
+            
+            export += ",\n";
+        }
+
+        export = export.substring(0, export.length() - 2) + "\n); \n\n" ; // Remove the last comma and add the closing parenthesis
+        return export;
     }
 }

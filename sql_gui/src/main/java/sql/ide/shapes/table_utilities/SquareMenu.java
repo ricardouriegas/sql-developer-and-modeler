@@ -266,7 +266,8 @@ public class SquareMenu {
 
         Attribute newAttribute = new Attribute(number, name, fullDataType, isMandatory, isPrimaryKey);
         attributesTable.getItems().add(newAttribute);
-
+        table.addAttribute(newAttribute);
+        
         // Clear the input fields after adding
         clearAttributeFields();
     }
@@ -277,7 +278,8 @@ public class SquareMenu {
     private void deleteAttribute() {
         Attribute selectedAttribute = attributesTable.getSelectionModel().getSelectedItem();
         if (selectedAttribute != null) {
-            attributesTable.getItems().remove(selectedAttribute);
+            attributesTable.getItems().remove(selectedAttribute); // remove from the gui table
+            table.removeAttribute(selectedAttribute); // remove from the table object itself
             reindexAttributes();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -322,6 +324,13 @@ public class SquareMenu {
             fullDataType += "(" + length + ")";
         }
 
+        // Update the attribute in the table object
+        table.getAttribute(selectedAttribute).setName(name);
+        table.getAttribute(selectedAttribute).setDataType(fullDataType);
+        table.getAttribute(selectedAttribute).setMandatory(isMandatory);
+        table.getAttribute(selectedAttribute).setPrimaryKey(isPrimaryKey);
+
+        // Update the attribute in the GUI table
         selectedAttribute.setName(name);
         selectedAttribute.setDataType(fullDataType);
         selectedAttribute.setMandatory(isMandatory);
@@ -334,7 +343,9 @@ public class SquareMenu {
     private void reindexAttributes() {
         int index = 1;
         for (Attribute attribute : attributesTable.getItems()) {
-            attribute.setNumber(index++);
+            attribute.setNumber(index);
+            table.getAttribute(attribute).setNumber(index);
+            index++;
         }
         attributesTable.refresh();
     }
@@ -388,31 +399,7 @@ public class SquareMenu {
         }
     }
 
-    /**
-     * Method to export the table to SQL
-     * @return SQL code to create the table
-      */
-    public String export(){
-        String export = "CREATE TABLE " + table.getName() + " (\n"; // SQL code to create the table
-
-        if (attributesTable.getItems().isEmpty()) // We cannot create a table without attributes
-            return "";
-        
-        // Iterate over the attributes to create the columns
-        for (Attribute attribute : attributesTable.getItems()) {
-            export += "\t" + attribute.getName() + " " + attribute.getDataType(); // Add the name and data type of the attribute
-            if (attribute.isPrimaryKey()) // If the attribute is a primary key, add PRIMARY KEY
-                export += " PRIMARY KEY";
-            
-            if (attribute.isMandatory()) // If the attribute is mandatory, add NOT NULL
-                export += " NOT NULL";
-            
-            export += ",\n";
-        }
-
-        export = export.substring(0, export.length() - 2) + "\n); \n\n" ; // Remove the last comma and add the closing parenthesis
-        return export; 
-    }
+    
 
     /**
      * Method to show the editor

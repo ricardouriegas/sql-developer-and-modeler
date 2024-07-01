@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 import javafx.event.ActionEvent;
@@ -85,14 +86,13 @@ public class ModelerController {
                 new FileChooser.ExtensionFilter("SQL Files", "*.sql"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
 
-        File file = fileChooser.showSaveDialog(new Stage());
+        File file = fileChooser.showSaveDialog(new Stage()); // show the save dialog
+
         if (file != null) {
             String content = "";
-            for (Shape shape : shapes) {
-                if (shape instanceof Table) {
-                    content += (((Table) shape).getContextMenu().export());
-                }
-            }
+            for (Shape shape : shapes) 
+                if (shape instanceof Table) 
+                    content += (((Table) shape)).export(); // Call the export method from all the tables
 
             if(content.equals("")){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -103,10 +103,11 @@ public class ModelerController {
                 return;
             }
 
-            if(!file.getName().endsWith(".sql"))
+            if(!file.getName().endsWith(".sql")) // if the file doesn't have the .sql extension we add it
                 file = new File(file.getAbsolutePath() + ".sql");
 
-            try (FileWriter writer = new FileWriter(file)) {
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) { // write the content to the file
                 writer.write(content);
             } catch (IOException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
