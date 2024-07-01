@@ -16,7 +16,10 @@ public class Relation implements Shape {
     // relation variables
     private final Table startTable;
     private final Table endTable;
-    private String relationType;
+    private String originCardinality;
+    private String targetCardinality;
+    private boolean isOriginOptional;
+    private boolean isTargetOptional;
 
     private LineMenu contextMenu;
 
@@ -99,14 +102,38 @@ public class Relation implements Shape {
         return endTable;
     }
 
-    public String getRelationType() {
-        return relationType;
+    public void setOriginCardinality(String originCardinality) {
+        this.originCardinality = originCardinality;
     }
 
-    public void setRelationType(String relationType) {
-        this.relationType = relationType;
+    public String getOriginCardinality() {
+        return originCardinality;
     }
-    
+
+    public void setTargetCardinality(String targetCardinality) {
+        this.targetCardinality = targetCardinality;
+    }
+
+    public String getTargetCardinality() {
+        return targetCardinality;
+    }
+
+    public void setOriginOptional(boolean originOptional) {
+        isOriginOptional = originOptional;
+    }
+
+    public boolean isOriginOptional() {
+        return isOriginOptional;
+    }
+
+    public void setTargetOptional(boolean targetOptional) {
+        isTargetOptional = targetOptional;
+    }
+
+    public boolean isTargetOptional() {
+        return isTargetOptional;
+    }
+
     /**************************************************************************/
     /************************ INTERFACE METHODS *******************************/
     /**************************************************************************/

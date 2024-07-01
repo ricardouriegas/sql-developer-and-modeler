@@ -130,6 +130,16 @@ public class Table implements Shape {
         return attributes.get(attributes.indexOf(attribute));
     }
 
+    public Attribute getPrimaryKey(){
+        for(Attribute attribute : attributes){
+            if(attribute.isPrimaryKey()){
+                return attribute;
+            }
+        }
+
+        return null;
+    }
+
     /**************************************************************************/
     /************************ INTERFACE METHODS *******************************/
     /**************************************************************************/
@@ -192,10 +202,30 @@ public class Table implements Shape {
             if (attribute.isPrimaryKey()) // If the attribute is a primary key, add PRIMARY KEY
                 export += " PRIMARY KEY";
             
-            if (attribute.isMandatory()) // If the attribute is mandatory, add NOT NULL
+            if (attribute.isMandatory() && !attribute.isPrimaryKey()) // If the attribute is mandatory, add NOT NULL
                 export += " NOT NULL";
             
             export += ",\n";
+        }
+
+        String fKeyColName;
+
+        for(Relation relation : foreignKeys){
+            if(relation.getStartTable() == this && !relation.isOriginOptional()){
+                fKeyColName = relation.getEndTable().getName() + "_" + relation.getEndTable().getPrimaryKey().getName();
+                export += "\t" + fKeyColName + " " + relation.getEndTable().getPrimaryKey().getDataType() + ",\n";
+                export += "\tFOREIGN KEY (" + fKeyColName + ") REFERENCES " + relation.getEndTable().getName() +
+                    "(" + relation.getEndTable().getPrimaryKey().getName() + ")";
+                export += ",\n";
+            }
+
+            if(relation.getEndTable() == this && !relation.isTargetOptional()){
+                fKeyColName = relation.getStartTable().getName() + "_" + relation.getStartTable().getPrimaryKey().getName();
+                export += "\t" + fKeyColName + " " + relation.getStartTable().getPrimaryKey().getDataType() + ",\n";
+                export += "\tFOREIGN KEY (" + fKeyColName + ") REFERENCES " + relation.getStartTable().getName() +
+                        "(" + relation.getStartTable().getPrimaryKey().getName() + ")";
+                export += ",\n";
+            }
         }
 
         export = export.substring(0, export.length() - 2) + "\n); \n\n" ; // Remove the last comma and add the closing parenthesis

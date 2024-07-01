@@ -95,7 +95,9 @@ public class LineMenu {
 
         // Apply Changes when user closes window
         stage.setOnCloseRequest(event -> {
-            verifyConfiguration(event);
+            if(verifyConfiguration(event)){
+                saveConfiguration();
+            }
         });
     }
 
@@ -109,7 +111,7 @@ public class LineMenu {
     /**
      * Verifies the configuration of the relation
      */
-    private void verifyConfiguration(Event event){
+    private boolean verifyConfiguration(Event event){
         String originCardinality = originCardinalityComboBox.getValue();
         String destinationCardinality = destinationCardinalityComboBox.getValue();
         boolean optionalOrigin = optionalOriginCheckBox.isSelected();
@@ -122,7 +124,7 @@ public class LineMenu {
             alert.setContentText("Origin and Destination Cardinality Required.");
             alert.showAndWait();
             event.consume();
-            return;
+            return false;
         }
 
         if(!optionalOrigin && !optionalDestination){
@@ -132,9 +134,30 @@ public class LineMenu {
             alert.setContentText("A relationship cannot be obligatory on both sides.");
             alert.showAndWait();
             event.consume();
+            return false;
         }
+
+        return true;
     }
 
+    /**
+     * Sets relation info using menu values
+     */
+    private void saveConfiguration(){
+        String originCardinality = originCardinalityComboBox.getValue();
+        String targetCardinality = destinationCardinalityComboBox.getValue();
+        boolean isOriginOptional = optionalOriginCheckBox.isSelected();
+        boolean isTargetOptional = optionalDestinationCheckBox.isSelected();
+
+        relation.setOriginCardinality(originCardinality);
+        relation.setTargetCardinality(targetCardinality);
+        relation.setOriginOptional(isOriginOptional);
+        relation.setTargetOptional(isTargetOptional);
+    }
+
+    /**
+     * Delete relation process
+     */
     private void deleteRelation(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete Relation");
