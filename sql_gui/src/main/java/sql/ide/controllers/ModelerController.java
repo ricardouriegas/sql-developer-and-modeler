@@ -39,6 +39,8 @@ public class ModelerController {
     private Shape selectedShape; // selected shape (for dragging)
     private List<Shape> shapes = new ArrayList<>(); // list of shapes
 
+    private int tableCounter = 1; // used for table default name assignation
+
     private static final double SQUARE_SIZE = 50; // square size
 
     /**
@@ -199,12 +201,20 @@ public class ModelerController {
             double y = event.getY();
 
             Table square = new Table(x - SQUARE_SIZE / 2, y - SQUARE_SIZE / 2, SQUARE_SIZE);
+
+            // set default table name
+            square.setName("Table_" + tableCounter);
+            tableCounter++;
+
             square.setContextMenu(new SquareMenu(square, this));
             shapes.add(square);
             drawShapes();
 
             square.openMenu(); // We open the context menu
-            // if for the right click
+
+            /**
+             * if for the right click
+             */
         } else if (event.getButton() == MouseButton.SECONDARY) {
 
             // get the shape that was clicked
@@ -357,6 +367,22 @@ public class ModelerController {
             }
         }
         return null;
+    }
+
+    /**
+     * Get a list of existing tables
+     * @return
+     */
+    public List<Table> getTableShapes() {
+        List<Table> tables = new ArrayList<>();
+
+        for (Shape shape : shapes) {
+            if (shape instanceof Table) {
+                tables.add((Table) shape);
+            }
+        }
+
+        return tables;
     }
 
     /**

@@ -5,10 +5,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sql.ide.controllers.ModelerController;
 import sql.ide.shapes.Table;
+
+import java.util.ArrayList;
 
 public class SquareMenu {
     private Table table; // Reference obtained table, all changes in this instance of table also affects the original one
@@ -94,27 +97,69 @@ public class SquareMenu {
      * Initialize the components for the General Menu
      */
     private void initializeGeneralMenu() {
+        Label warningLabel = new Label();
+        warningLabel.setTextFill(Color.color(1,0,0));
+        warningLabel.setVisible(false);
+
         Label nameLabel = new Label("Table Name:"); // A simple label
         tableNameField = new TextField(); // Create a new TextField for the name of the table
-        tableNameField.setPromptText("Table Name"); // Setting a placeholder text
+        tableNameField.setText(table.getName()); // Setting a default text
 
         Button deleteTableButton = new Button("Delete Table");
-
         deleteTableButton.setOnAction(event -> deleteTable()); // Set an action for the delete button
-        
+
         // Add a listener to the table name field to update the table name
         tableNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            table.setName(newValue);
+            boolean validName = true;
+
+            // if the name is left empy
+            if(newValue == null || newValue.isEmpty()) {
+                warningLabel.setText("Table Name cannot be empty");
+                warningLabel.setVisible(true);
+                validName = false;
+            }
+
+            ArrayList<String> tableNames = new ArrayList<>();
+            for (Table table : modelerController.getTableShapes()){
+                if(table == this.table){
+                    continue;
+                }
+                tableNames.add(table.getName());
+            }
+
+            // if the name is occupied
+            if(tableNames.contains(newValue)){
+                warningLabel.setText("Table Name already exists");
+                warningLabel.setVisible(true);
+                validName = false;
+            }
+
+            // if the name contains '/' (forbidden printable ascii character in filenames in linux)
+            if(newValue != null && newValue.contains("/")){
+                warningLabel.setText("Table Name can't contain <</>>");
+                warningLabel.setVisible(true);
+                validName = false;
+            }
+
+            if(validName){
+                table.setName(newValue);
+                warningLabel.setVisible(false);
+            }
+
             modelerController.drawShapes();
         });
 
         generalBox = new VBox(10);
         generalBox.setPrefWidth(150);
         generalBox.setPadding(new Insets(10));
-        generalBox.getChildren().addAll(nameLabel, tableNameField, deleteTableButton);
+        generalBox.getChildren().addAll(warningLabel, nameLabel, tableNameField, deleteTableButton);
 
         generalLayout = new BorderPane();
         generalLayout.setLeft(generalBox);
+
+        stage.setOnCloseRequest(event -> {
+            tableNameField.setText(table.getName());
+        });
     }
 
     /**
