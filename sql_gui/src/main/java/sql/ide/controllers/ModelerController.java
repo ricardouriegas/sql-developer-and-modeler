@@ -87,7 +87,7 @@ public class ModelerController {
                 return;
 
             // Array of files in the selected directory
-            File[] files = selectedDirectory.listFiles((dir, name) -> name.endsWith(".sql"));
+            File[] files = selectedDirectory.listFiles((dir, name) -> name.endsWith(".csv"));
 
             // if there are no files in the directory
             if(files == null || files.length == 0){
@@ -112,7 +112,7 @@ public class ModelerController {
                     continue;
 
                 // get the table name
-                String tableName = file.getName().replace(".sql", "");
+                String tableName = file.getName().replace(".csv", "");
 
                 // get the attribute names
                 String headers[] = header.split(",");
