@@ -456,8 +456,7 @@ public class ModelerController {
     }
 
     /**
-     * Get a list of existing tables
-     * @return
+     * @return A list of existing tables
      */
     public List<Table> getTableShapes() {
         List<Table> tables = new ArrayList<>();
@@ -472,16 +471,18 @@ public class ModelerController {
     }
 
     /**
-     * Deletes the shape at given coords
-     * 
-     * @param x
-     * @param y
+     * @return A list of existing relations
      */
-    public void deleteShape(Double x, Double y) {
-        Shape shape = getShapeAt(x, y);
-        if (shape != null) {
-            shapes.remove(shape);
+    public List<Relation> getRelationShapes(){
+        List<Relation> relations = new ArrayList<>();
+
+        for(Shape shape : shapes){
+            if(shape instanceof Relation){
+                relations.add((Relation) shape);
+            }
         }
+
+        return relations;
     }
 
     /**
@@ -490,6 +491,16 @@ public class ModelerController {
      * @param shape
      */
     public void deleteShape(Shape shape) {
+        // If the shape is a table, then also delete all relations from/to the table
+        if(shape instanceof Table){
+            List<Relation> relations = getRelationShapes();
+            for(Relation relation : relations){
+                if(relation.getStartTable() == shape || relation.getEndTable() == shape){
+                    shapes.remove(relation);
+                }
+            }
+        }
+
         shapes.remove(shape);
         drawShapes();
     }
