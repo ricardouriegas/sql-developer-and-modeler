@@ -12,6 +12,7 @@ import sql.ide.controllers.ModelerController;
 import sql.ide.shapes.Table;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SquareMenu {
     private Table table; // Reference obtained table, all changes in this instance of table also affects the original one
@@ -165,6 +166,7 @@ public class SquareMenu {
     /**
      * Initialize the components for the Attributes menu
      */
+    @SuppressWarnings("unchecked")
     private void initializeAttributesMenu() {
         nameField = new TextField(); // Create a new TextField for the name of the attribute
         nameField.setPromptText("Name"); // Set a placeholder text for the field
@@ -444,7 +446,18 @@ public class SquareMenu {
         }
     }
 
-    
+    /**
+     * Method to import settings from a table
+     * @param name
+     * @param attributes
+      */
+    public void importSettings(Table table){
+        List<Attribute> attributes = table.getAttributes();
+        for(Attribute attribute : attributes)
+            attributesTable.getItems().add(attribute);
+        
+        tableNameField.setText(table.getName());
+    }
 
     /**
      * Method to show the editor

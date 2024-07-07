@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,12 +20,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sql.ide.shapes.Relation;
 import sql.ide.shapes.Shape;
 import sql.ide.shapes.Table;
 import sql.ide.shapes.relation_utilities.LineMenu;
+import sql.ide.shapes.table_utilities.Attribute;
 import sql.ide.shapes.table_utilities.SquareMenu;
 
 public class ModelerController {
@@ -73,9 +77,91 @@ public class ModelerController {
      * 
      * @param event
      */
-    public void importFile(ActionEvent event) {
+        public void importFile(ActionEvent event) {
+            DirectoryChooser directoryChooser = new DirectoryChooser(); // create the directory chooser
+            directoryChooser.setTitle("Select Directory"); // set the title of the dialog
+            File selectedDirectory = directoryChooser.showDialog(new Stage()); // show the dialog
 
-    }
+            //! if the user regrets the action and closes the dialog
+            if(selectedDirectory == null)
+                return;
+
+            // Array of files in the selected directory
+            File[] files = selectedDirectory.listFiles((dir, name) -> name.endsWith(".sql"));
+
+            // if there are no files in the directory
+            if(files == null || files.length == 0){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("There are no files to import.");
+                alert.showAndWait();
+                return;
+            }
+
+            // clear the shapes
+            shapes.clear();
+
+            // read the files
+            for (File file : files) {
+                // read the header of the file (i.e. attribute names)
+                String header = readHeader(file);
+
+                // if the file is empty
+                if(header == null)
+                    continue;
+
+                // get the table name
+                String tableName = file.getName().replace(".sql", "");
+
+                // get the attribute names
+                String headers[] = header.split(",");
+
+                // create the table
+                Random rand = new Random();
+                Table table = new Table(rand.nextInt(500), rand.nextInt(500), SQUARE_SIZE); // random x and y
+                
+                // create the attributes
+                ArrayList<Attribute> attributes = new ArrayList<>();
+                for (int i = 0; i < headers.length; i++) 
+                    attributes.add(new Attribute(i + 1, headers[i], "Varchar", false, false));
+                
+                table.setName(tableName); // set the table name
+                table.setAttributes(attributes); // set the attributes
+                
+                // set the context menu
+                SquareMenu contextMenu = new SquareMenu(table, this); // create the context menu
+                contextMenu.importSettings(table); // import the settings
+                table.setContextMenu(contextMenu); // set the context menu attached to the table
+
+                // TODO: Add relations to the table
+
+                // add the table to the shapes
+                shapes.add(table);
+            }
+
+            drawShapes();
+        }
+
+        /**
+         * Read the header of the file (i.e. the attribute names)
+         * @param sqlFile
+         * @return
+          */
+        private String readHeader(File sqlFile){  
+            String absolutePath = sqlFile.getAbsolutePath();
+            try (BufferedReader reader = new BufferedReader(new FileReader(absolutePath))) {
+                String line = reader.readLine();
+                return line;
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("An error occurred while reading the file: " + sqlFile.getName());
+                alert.showAndWait();
+            }
+            return null;
+        }
 
     /**
      * Export the file (export the model to a sql file)
