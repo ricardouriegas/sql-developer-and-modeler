@@ -221,16 +221,16 @@ public class Table implements Shape {
         for(Relation relation : foreignKeys){
             if(relation.getStartTable() == this && !relation.isOriginOptional()){
                 fKeyColName = relation.getEndTable().getName() + "_" + relation.getEndTable().getPrimaryKey().getName();
-                export += "\t" + fKeyColName + " " + relation.getEndTable().getPrimaryKey().getDataType() + ",\n";
-                export += "\tFOREIGN KEY (" + fKeyColName + ") REFERENCES " + relation.getEndTable().getName() +
+                export += "\t" + fKeyColName + " " + relation.getEndTable().getPrimaryKey().getDataType() + "--,\n";
+                export += "\t--FOREIGN KEY (" + fKeyColName + ") REFERENCES " + relation.getEndTable().getName() +
                     "(" + relation.getEndTable().getPrimaryKey().getName() + ")";
                 export += ",\n";
             }
 
             if(relation.getEndTable() == this && !relation.isTargetOptional()){
                 fKeyColName = relation.getStartTable().getName() + "_" + relation.getStartTable().getPrimaryKey().getName();
-                export += "\t" + fKeyColName + " " + relation.getStartTable().getPrimaryKey().getDataType() + ",\n";
-                export += "\tFOREIGN KEY (" + fKeyColName + ") REFERENCES " + relation.getStartTable().getName() +
+                export += "\t" + fKeyColName + " " + relation.getStartTable().getPrimaryKey().getDataType() + "--,\n";
+                export += "\t--FOREIGN KEY (" + fKeyColName + ") REFERENCES " + relation.getStartTable().getName() +
                         "(" + relation.getStartTable().getPrimaryKey().getName() + ")";
                 export += ",\n";
             }

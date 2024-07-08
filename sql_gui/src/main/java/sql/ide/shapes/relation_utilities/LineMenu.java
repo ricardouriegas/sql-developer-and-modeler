@@ -77,7 +77,7 @@ public class LineMenu {
         destinationGrid.setHgap(10);
         destinationGrid.setVgap(5);
 
-        Label destinationTableName = new Label("Destination Table:" + relation.getEndTable().getName());
+        Label destinationTableName = new Label("Destination Table: " + relation.getEndTable().getName());
         destinationCardinalityComboBox = new ComboBox<>();
         destinationCardinalityComboBox.getItems().addAll("1", "N");
         optionalDestinationCheckBox = new CheckBox("Optional Destination");
@@ -96,7 +96,7 @@ public class LineMenu {
         // Apply Changes when user closes window
         stage.setOnCloseRequest(event -> {
             if(verifyConfiguration(event)){
-                saveConfiguration();
+                saveSettings();
             }
         });
     }
@@ -143,7 +143,7 @@ public class LineMenu {
     /**
      * Sets relation info using menu values
      */
-    private void saveConfiguration(){
+    private void saveSettings(){
         String originCardinality = originCardinalityComboBox.getValue();
         String targetCardinality = destinationCardinalityComboBox.getValue();
         boolean isOriginOptional = optionalOriginCheckBox.isSelected();
@@ -153,6 +153,16 @@ public class LineMenu {
         relation.setTargetCardinality(targetCardinality);
         relation.setOriginOptional(isOriginOptional);
         relation.setTargetOptional(isTargetOptional);
+    }
+
+    /**
+     * Method to import settings from the relation
+     */
+    public void importSettings(){
+        originCardinalityComboBox.setValue(relation.getOriginCardinality());
+        destinationCardinalityComboBox.setValue(relation.getTargetCardinality());
+        optionalOriginCheckBox.setSelected(relation.isOriginOptional());
+        optionalDestinationCheckBox.setSelected(relation.isTargetOptional());
     }
 
     /**

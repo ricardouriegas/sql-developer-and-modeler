@@ -119,7 +119,7 @@ public class ModelerController {
 
                 // create the table
                 Random rand = new Random();
-                Table table = new Table(rand.nextInt(500), rand.nextInt(500), SQUARE_SIZE); // random x and y
+                Table table = new Table(rand.nextInt(450), rand.nextInt(450), SQUARE_SIZE); // random x and y
                 
                 // create the attributes
                 ArrayList<Attribute> attributes = new ArrayList<>();
@@ -134,10 +134,53 @@ public class ModelerController {
                 contextMenu.importSettings(table); // import the settings
                 table.setContextMenu(contextMenu); // set the context menu attached to the table
 
-                // TODO: Add relations to the table
-
                 // add the table to the shapes
                 shapes.add(table);
+            }
+
+            // Get tables and their names in different lists
+            List<Table> tables = getTableShapes();
+            List<String> tableNames = new ArrayList<>();
+
+            for(Table table : tables){
+                tableNames.add(table.getName());
+            }
+
+            /*
+             * 1. Get the attributes of each table
+             * 2. For each attribute name, check if it's equal to a table name
+             * 3. If it is, then use the table that has the attribute (start table) and the table that has the same name
+             *    as the attribute (end table) to create the relation
+             * 4. Set the relations cardinality, optionality and use the setters to finish the job
+             */
+            for(Table table : tables){
+                List<Attribute> attributes = table.getAttributes();
+
+                for(Attribute attribute : attributes){
+                    String attributeName = attribute.getName();
+                    String[] split = attributeName.split("_");
+                    attributeName = split[0];
+
+                    if(tableNames.contains(attributeName)){
+
+                        Relation relation = new Relation(table, getTableByName(attributeName));
+                        relation.setOriginCardinality("1");
+                        relation.setTargetCardinality("N");
+                        relation.setOriginOptional(false);
+                        relation.setTargetOptional(true);
+
+                        // set the context menu
+                        LineMenu lineMenu = new LineMenu(relation, this);
+                        relation.setContextMenu(lineMenu);
+                        lineMenu.importSettings();
+
+                        // set the tables' relation
+                        table.addRelation(relation);
+                        getTableByName(attributeName).addRelation(relation);
+
+                        shapes.add(relation);
+                    }
+                }
             }
 
             drawShapes();
@@ -165,9 +208,8 @@ public class ModelerController {
 
     /**
      * Export the file (export the model to a sql file)
-     * @param event
      */
-    public void exportFile(ActionEvent event) {
+    public void exportFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save SQL File");
         fileChooser.getExtensionFilters().addAll(
@@ -483,6 +525,23 @@ public class ModelerController {
         }
 
         return relations;
+    }
+
+    /**
+     *
+     * @param name
+     * @return A table given its name
+     */
+    public Table getTableByName(String name){
+        List<Table> tables = getTableShapes();
+
+        for(Table table : tables){
+            if(table.getName().equals(name)){
+                return table;
+            }
+        }
+
+        return null;
     }
 
     /**
