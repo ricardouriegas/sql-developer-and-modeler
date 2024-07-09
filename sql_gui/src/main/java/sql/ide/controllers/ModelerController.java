@@ -220,9 +220,23 @@ public class ModelerController {
 
         if (file != null) {
             String content = "";
-            for (Shape shape : shapes) 
-                if (shape instanceof Table) 
-                    content += (((Table) shape)).export(); // Call the export method from all the tables
+            String temp;
+            for (Shape shape : shapes) {
+                if (shape instanceof Table) {
+                    try {
+                        temp = (((Table) shape)).export();
+                    } catch (NullPointerException e) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText(null);
+                        alert.setContentText("The next table does not have a Primary Key: " + e.getMessage());
+                        alert.showAndWait();
+                        return;
+                    }
+
+                    content += temp; // Call the export method from all the tables
+                }
+            }
 
             if(content.equals("")){
                 Alert alert = new Alert(Alert.AlertType.ERROR);

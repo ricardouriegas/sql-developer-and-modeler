@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sql.ide.controllers.ModelerController;
 import sql.ide.shapes.Relation;
+import sql.ide.shapes.Table;
 
 public class LineMenu {
     private final Relation relation; // Reference obtained relation, all changes of this instance of relation also affect the original
@@ -177,6 +178,12 @@ public class LineMenu {
 
         if (alert.getResult() == ButtonType.OK) {
             modelerController.deleteShape(relation);
+
+            Table startTable = relation.getStartTable();
+            startTable.removeRelation(relation);
+
+            Table endTable = relation.getEndTable();
+            endTable.removeRelation(relation);
             stage.close();
         }
     }

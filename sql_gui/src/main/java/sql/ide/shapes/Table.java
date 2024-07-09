@@ -111,13 +111,17 @@ public class Table implements Shape {
     }
 
     /**************************************************************************/
-
     /**************************************************************************/
+    /************************ ATTRIBUTE METHODS *******************************/
+
     public void addRelation(Relation relation) {
         foreignKeys.add(relation);
     }
 
-    /************************ ATTRIBUTE METHODS *******************************/
+    public void removeRelation(Relation relation){
+        foreignKeys.remove(relation);
+    }
+
     public void addAttribute(Attribute attribute) {
         attributes.add(attribute);
     }
@@ -198,7 +202,7 @@ public class Table implements Shape {
     /************************ EXPORT & IMPORT ********************************/
     /**************************************************************************/
 
-    public String export(){
+    public String export() throws NullPointerException {
         String export = "CREATE TABLE " + name + " (\n"; // SQL code to create the table
 
         if (attributes.isEmpty()) // We cannot create a table without attributes
@@ -219,21 +223,30 @@ public class Table implements Shape {
         String fKeyColName;
 
         for(Relation relation : foreignKeys){
-            if(relation.getStartTable() == this && !relation.isOriginOptional()){
-                fKeyColName = relation.getEndTable().getName() + "_" + relation.getEndTable().getPrimaryKey().getName();
-                export += "\t" + fKeyColName + " " + relation.getEndTable().getPrimaryKey().getDataType() + "--,\n";
-                export += "\t--FOREIGN KEY (" + fKeyColName + ") REFERENCES " + relation.getEndTable().getName() +
-                    "(" + relation.getEndTable().getPrimaryKey().getName() + ")";
-                export += ",\n";
+            try {
+                if(relation.getStartTable() == this && !relation.isOriginOptional()){
+                    fKeyColName = relation.getEndTable().getName() + "_" + relation.getEndTable().getPrimaryKey().getName();
+                    export += "\t" + fKeyColName + " " + relation.getEndTable().getPrimaryKey().getDataType() + "--,\n";
+                    export += "\t--FOREIGN KEY (" + fKeyColName + ") REFERENCES " + relation.getEndTable().getName() +
+                            "(" + relation.getEndTable().getPrimaryKey().getName() + ")";
+                    export += ",\n";
+                }
+            } catch (NullPointerException e){
+                throw new NullPointerException(relation.getEndTable().getName());
             }
 
-            if(relation.getEndTable() == this && !relation.isTargetOptional()){
-                fKeyColName = relation.getStartTable().getName() + "_" + relation.getStartTable().getPrimaryKey().getName();
-                export += "\t" + fKeyColName + " " + relation.getStartTable().getPrimaryKey().getDataType() + "--,\n";
-                export += "\t--FOREIGN KEY (" + fKeyColName + ") REFERENCES " + relation.getStartTable().getName() +
-                        "(" + relation.getStartTable().getPrimaryKey().getName() + ")";
-                export += ",\n";
+            try {
+                if(relation.getEndTable() == this && !relation.isTargetOptional()){
+                    fKeyColName = relation.getStartTable().getName() + "_" + relation.getStartTable().getPrimaryKey().getName();
+                    export += "\t" + fKeyColName + " " + relation.getStartTable().getPrimaryKey().getDataType() + "--,\n";
+                    export += "\t--FOREIGN KEY (" + fKeyColName + ") REFERENCES " + relation.getStartTable().getName() +
+                            "(" + relation.getStartTable().getPrimaryKey().getName() + ")";
+                    export += ",\n";
+                }
+            } catch (NullPointerException e){
+                throw new NullPointerException(relation.getStartTable().getName());
             }
+
         }
 
         export = export.substring(0, export.length() - 2) + "\n); \n\n" ; // Remove the last comma and add the closing parenthesis
