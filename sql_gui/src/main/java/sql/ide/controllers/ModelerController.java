@@ -124,7 +124,7 @@ public class ModelerController {
                 // create the attributes
                 ArrayList<Attribute> attributes = new ArrayList<>();
                 for (int i = 0; i < headers.length; i++) 
-                    attributes.add(new Attribute(i + 1, headers[i], "Varchar", false, false));
+                    attributes.add(new Attribute(i + 1, headers[i], "String", false, false));
                 
                 table.setName(tableName); // set the table name
                 table.setAttributes(attributes); // set the attributes

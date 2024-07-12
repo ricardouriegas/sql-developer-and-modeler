@@ -173,14 +173,14 @@ public class SquareMenu {
     
         // Create a ComboBox for the data type of the attribute
         dataTypeComboBox = new ComboBox<>();
-        dataTypeComboBox.getItems().addAll("Varchar", "Integer", "Float", "Double"); // ! Data types
+        dataTypeComboBox.getItems().addAll("String", "Number", "Boolean", "Date"); // ! Data types
         dataTypeComboBox.setPromptText("Select Data Type"); // Set a placeholder text for the ComboBox
         dataTypeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null)
                 return;
     
             // ? Show the length field if the data type is Double, Float, Integer or Varchar
-            if (newValue.equals("Double") || newValue.equals("Float") || newValue.equals("Varchar")) {
+            if (newValue.equals("String")) {
                 lengthField.setVisible(true);
             } else {
                 lengthField.setVisible(false);
@@ -301,9 +301,9 @@ public class SquareMenu {
         }
 
         String fullDataType = dataType;
-        if (!length.isEmpty() && lengthField.isVisible()) {
-            fullDataType += "(" + length + ")";
-        }
+        // if (!length.isEmpty() && lengthField.isVisible()) {
+        //     fullDataType += "(" + length + ")";
+        // }
 
         int maxNumber = attributesTable.getItems().stream()
                 .mapToInt(Attribute::getNumber)
@@ -367,9 +367,9 @@ public class SquareMenu {
         }
 
         String fullDataType = dataType;
-        if (!length.isEmpty() && lengthField.isVisible()) {
-            fullDataType += "(" + length + ")";
-        }
+        // if (!length.isEmpty() && lengthField.isVisible()) {
+        //     fullDataType += "(" + length + ")";
+        // }
 
         // Update the attribute in the table object
         table.getAttribute(selectedAttribute).setName(name);
